@@ -2,9 +2,13 @@
 
 volatile int global = 42;
 volatile uint32_t controller_status = 0;
-#define CATRIDGE_STATUS_REGISTER 0x4000001C
-void start_here(void);
 volatile char *VIDEO_MEMORY = (volatile char *)(0x50000000 + 0xF4800);
+
+#define CATRIDGE_STATUS_REGISTER 0x4000001C
+uint32_t colorEntry = 0xffffffff;
+void start_here(void){
+    return;
+}
 
 int main() {
     int a = 4;
@@ -56,17 +60,8 @@ int main() {
             }
             last_global = global;
         }
-    }
-    // upon successfully exit
-    return 0;
-}
-
-
-
-void launch(){
-    while(1){
         uint32_t catridge_status = *((volatile uint32_t *) CATRIDGE_STATUS_REGISTER);
-        print("%x", catridge_status);
+        // printf("%x", catridge_status);
         // check if the CIS (lowest bit) is 1
         if (catridge_status & 1 == 1){
             volatile uint32_t start_address = catridge_status; 
@@ -76,4 +71,28 @@ void launch(){
             start_here();
         }
     }
+    setGraphicMode();
+    uint32_t sprite_control_structure = 0x00F00800;
+    setColorPalette(0, 0xFFFF0000, 0); // Red
+    drawSprite(sprite_control_structure);
+
+    // upon successfully exit
+    return 0;
 }
+
+
+
+// void launch(){
+//     while(1){
+//         uint32_t catridge_status = *((volatile uint32_t *) CATRIDGE_STATUS_REGISTER);
+//         print("%x", catridge_status);
+//         // check if the CIS (lowest bit) is 1
+//         if (catridge_status & 1 == 1){
+//             volatile uint32_t start_address = catridge_status; 
+//             // make the lowest 2 bits 00
+//             start_address = start_address & 0xfffffe00;
+//             //start the application
+//             start_here();
+//         }
+//     }
+// }
