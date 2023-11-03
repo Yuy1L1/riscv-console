@@ -1,9 +1,5 @@
 #include <stdlib.h>
 
-#define INTERRUPT_ENABLE_REGISTEER 0x40000000
-#define INTERRUPT_PENDING_REGISTER 0x40000004
-#define CATRIDGE_STATUS_REGISTER 0x4000001C
-
 void video_interrupt();
 void cmd_interrupt();
 /*

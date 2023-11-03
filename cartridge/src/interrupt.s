@@ -1,5 +1,5 @@
 .section .text, "ax"
-.global _interrupt_handler, GetTicks, GetController
+.global _interrupt_handler
 _interrupt_handler:
     addi	sp,sp,-40
     sw	    ra,36(sp)
@@ -26,6 +26,7 @@ _interrupt_handler:
     addi    sp,sp,40
     mret
 
+.global GetTicks, GetController
 GetTicks:
     li a5, 1
     ecall
