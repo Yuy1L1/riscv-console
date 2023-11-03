@@ -70,7 +70,7 @@ void init(void) {
     // Enable command interrupts
     *INTERRUPT_ENABLE_REGISTER = *INTERRUPT_ENABLE_REGISTER | (1 << 2);
     // Enable video interrupts
-    // *INTERRUPT_ENABLE_REGISTER = *INTERRUPT_ENABLE_REGISTER | (1 << 1);
+    *INTERRUPT_ENABLE_REGISTER = *INTERRUPT_ENABLE_REGISTER | (1 << 1);
     
     MTIMECMP_LOW = 1;
     MTIMECMP_HIGH = 0;
@@ -89,6 +89,8 @@ int setSmallColorPalette(uint32_t palette_number, uint32_t color, uint32_t entry
     return 1;
 }
 
+uint32_t counter = 0;
+uint8_t currentColorIndex = 0;
 void c_interrupt_handler(void){
     uint64_t NewCompare = (((uint64_t)MTIMECMP_HIGH)<<32) | MTIMECMP_LOW;
     NewCompare += 100;
@@ -99,9 +101,32 @@ void c_interrupt_handler(void){
     
     if ((*INTERRUPT_PENDING_REGISTER >> 2) & 1 && (*INTERRUPT_ENABLE_REGISTER >> 2) & 1) {
         setSmallColorPalette(0, 0xFF00F0FF, 2); // cyan
-        *INTERRUPT_PENDING_REGISTER = 4;
+        *INTERRUPT_PENDING_REGISTER |= (1 << 2);
         delay_ms(500);
         setSmallColorPalette(0, 0xFFFF00FF, 2); // magenta
+    }
+
+    
+    if ((*INTERRUPT_PENDING_REGISTER >> 1) & 1 && (*INTERRUPT_ENABLE_REGISTER >> 1) & 1) {
+        counter++;
+        if (counter % 5 == 0) {
+            switch (currentColorIndex % 4) {
+                case 0:
+                    setSmallColorPalette(0, 0xFF800000, 3);
+                    break;
+                case 1:
+                    setSmallColorPalette(0, 0xFF008000, 3);
+                    break;
+                case 2:
+                    setSmallColorPalette(0, 0xFF000080, 3);
+                    break;
+                case 3:
+                    setSmallColorPalette(0, 0xFFFF0000, 3);
+                    break;
+            }
+            currentColorIndex++; // Move to the next color for the next cycle
+        }
+        *INTERRUPT_PENDING_REGISTER |= (1 << 1);
     }
 }
 
@@ -113,7 +138,6 @@ void c_interrupt_handler(void){
 // if (((interrupt_pending_register) & 0x4) >> 2) {
 //     setSmallColorPalette(0, 0xFFFFFFFF, 2)
 // }
-
 
 volatile int video_counter = 0;
 
