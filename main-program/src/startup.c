@@ -105,7 +105,6 @@ void c_interrupt_handler(void){
         delay_ms(500);
         setSmallColorPalette(0, 0xFFFF00FF, 2); // magenta
     }
-
     
     if ((*INTERRUPT_PENDING_REGISTER >> 1) & 1 && (*INTERRUPT_ENABLE_REGISTER >> 1) & 1) {
         counter++;
@@ -129,15 +128,6 @@ void c_interrupt_handler(void){
         *INTERRUPT_PENDING_REGISTER |= (1 << 1);
     }
 }
-
-// void cmd_interrupt() {
-//     interrupt_pending_register = interrupt_pending_register & 0x00000003;
-// }
-
-// uint32_t interrupt_pending_register = *((volatile uint32_t * ) INTERRUPT_PENDING_REGISTER);
-// if (((interrupt_pending_register) & 0x4) >> 2) {
-//     setSmallColorPalette(0, 0xFFFFFFFF, 2)
-// }
 
 volatile int video_counter = 0;
 

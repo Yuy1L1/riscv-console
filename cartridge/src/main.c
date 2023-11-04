@@ -41,21 +41,7 @@ int main() {
     int x_pos = 12;
     int countdown = 1;
     uint32_t global = 42;
-    uint32_t controller_status = 0;
 
-    VIDEO_MEMORY[0] = 'H';
-    VIDEO_MEMORY[1] = 'e';
-    VIDEO_MEMORY[2] = 'l';
-    VIDEO_MEMORY[3] = 'l';
-    VIDEO_MEMORY[4] = 'o';
-    VIDEO_MEMORY[5] = ' ';
-    VIDEO_MEMORY[6] = 'W';
-    VIDEO_MEMORY[7] = 'o';
-    VIDEO_MEMORY[8] = 'r';
-    VIDEO_MEMORY[9] = 'l';
-    VIDEO_MEMORY[10] = 'd';
-    VIDEO_MEMORY[11] = '!';
-    VIDEO_MEMORY[12] = 'X';
     setGraphicsMode();
 
     int sprite_index1 = 0;
@@ -92,6 +78,12 @@ int main() {
     while (1) {
         int c = a + b + global;
         global = GetTicks();
+        if (controller_status & 0x1) {
+            y_pos2--;
+            setSmallColorPalette(0, 0xFF008000, 1);
+            setSmallColorPalette(0, 0xFF008000, 2);
+            setSmallColorPalette(0, 0xFF008000, 3);
+        }
         if (global != last_global) {
             if (global % 20 == 0) {
                 if (periodic_switcher) {
@@ -103,28 +95,17 @@ int main() {
                 }
             }
             if (controller_status) {
-                VIDEO_MEMORY[x_pos] = ' ';
                 if (controller_status & 0x1) {
-                    if (x_pos & 0x3F) {
-                        x_pos--;
-                    }
+                    y_pos2--;  // Move sprite up
+                    setSmallColorPalette(0, 0xFF008000, 1);
+                    setSmallColorPalette(0, 0xFF008000, 2);
+                    setSmallColorPalette(0, 0xFF008000, 3);
                 }
                 if (controller_status & 0x2) {
-                    if (x_pos >= 0x40) {
-                        x_pos -= 0x40;
-                    }
+                    y_pos2++;  // Move sprite down
                 }
-                if (controller_status & 0x4) {
-                    if (x_pos < 0x8C0) {
-                        x_pos += 0x40;
-                    }
-                }
-                if (controller_status & 0x8) {
-                    if ((x_pos & 0x3F) != 0x3F) {
-                        x_pos++;
-                    }
-                }
-                VIDEO_MEMORY[x_pos] = 'X';
+                interrupt_sprite = pack_sprite_data(sprite_index2, z_position2, y_pos2, x_pos2, palette_index2);
+                drawSprite(interrupt_sprite, interrupt_palette_color);
             }
             last_global = global;
         }
