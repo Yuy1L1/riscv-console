@@ -1,5 +1,6 @@
 #include <stdint.h>
 
+
 extern uint8_t _erodata[];
 extern uint8_t _data[];
 extern uint8_t _edata[];
@@ -111,7 +112,9 @@ int setSmallColorPalette(uint32_t palette_number, uint32_t color, uint32_t entry
 
 // drawSprite(Sprite sprite, int x, int y, int z)
 uint16_t drawSprite(uint32_t sprite_control_structure, uint8_t sprite_color) {
-    uint32_t* small_data_addr = (volatile uint32_t *)(SMALL_SPRITE_DATA_ADDR + small_sprite_counter * SMALL_SPRITE_SIZE);
+    uint8_t index = (sprite_control_structure >> 24) & 0xFF;
+    uint32_t* small_data_addr = (volatile uint32_t *)(SMALL_SPRITE_DATA_ADDR + index * SMALL_SPRITE_SIZE);
+    //uint32_t* small_data_addr = (volatile uint32_t *)(SMALL_SPRITE_DATA_ADDR + small_sprite_counter * SMALL_SPRITE_SIZE);
     for (int i = 0; i < 16; i++) {
         for (int j = 0; j < 16; j++) {
             small_data_addr[i * 16 + j] = sprite_color;
@@ -121,6 +124,39 @@ uint16_t drawSprite(uint32_t sprite_control_structure, uint8_t sprite_color) {
     uint32_t *small_control_addr = (volatile uint32_t *)(SMALL_SPRITE_CONTROL_ADDR + small_sprite_counter * SMALL_SPRITE_CONTROL_SIZE);
     *small_control_addr = sprite_control_structure;
     small_sprite_counter++;
+    // }
+    // // medium sprite
+    // if (width < 64 && height < 64){
+    //     uint32_t * medium_control_addr = (volatile uint32_t *)(MEDIUM_SPRITE_CONTROL_ADDR + medium_sprite_counter * MEDIUM_SPRITE_CONTROL_SIZE);
+    //     medium_control_addr[0] = sprite_control_structure;
+    //     medium_control_addr ++;
+    // }
+    // // a large sprite
+    // if (width > 64 && height > 64)
+    // {
+    //     uint32_t * large_control_addr = (volatile uint32_t *)(LARGE_SPRITE_CONTROL_ADDR + large_sprite_counter * LARGE_SPRITE_CONTROL_SIZE);
+    //     large_control_addr[0] = sprite_control_structure;
+    //     large_sprite_counter ++;
+    // }
+    // // successful
+    return 0;
+}
+
+// eraseSprite(Sprite sprite, int x, int y, int z)
+uint16_t eraseSprite(uint32_t sprite_control_structure) {
+    uint8_t index = (sprite_control_structure >> 24) & 0xFF;
+    uint32_t* small_data_addr = (volatile uint32_t *)(SMALL_SPRITE_DATA_ADDR + index * SMALL_SPRITE_SIZE);
+    for (int i = 0; i < 16; i++) {
+        for (int j = 0; j < 16; j++) {
+            small_data_addr[i * 16 + j] = 0;
+        }
+    }
+    small_sprite_counter--;
+    uint32_t *small_control_addr = (volatile uint32_t *)(SMALL_SPRITE_CONTROL_ADDR + small_sprite_counter * SMALL_SPRITE_CONTROL_SIZE);
+    *small_control_addr = sprite_control_structure;
+    //These 3 lines allow the sprite to finish being deleted, kind of. (it messes up sprites ahead.)
+    
+
     // }
     // // medium sprite
     // if (width < 64 && height < 64){
