@@ -8,4 +8,5 @@ TODO:
 1. write more func in sprite management
 2. create & write memory_management.c and game_state.c
 3. write Makefile for interrupt.c cuz current interrupt func is in startup.c
-4. what is stub? not sure, need to ask TA
+4. crt0.s how to assembly coding?
+5. what is stub? not sure, need to ask TA
