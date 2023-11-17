@@ -46,7 +46,6 @@ int main() {
 
     setGraphicsMode();
 
-
     int sprite_index1 = 0;
     int z_position1 = 2;
     int y_pos1 = 200;
@@ -56,12 +55,12 @@ int main() {
 
     int sprite_index2 = 1;
     int z_position2 = 2;
-    int y_pos2,y_pos2_old = 200;
+    int y_pos2 = 200;
     int x_pos2 = 300;
     int palette_index2 = 0;
     uint32_t interrupt_sprite = pack_sprite_data(sprite_index2, z_position2, y_pos2, x_pos2, palette_index2);    
 
-    int sprite_index3 = 3;
+    int sprite_index3 = 2;
     int z_position3 = 2;
     int y_pos3 = 100;
     int x_pos3 = 250;
@@ -74,9 +73,10 @@ int main() {
     uint8_t periodic_palette_color = 1;
     uint8_t interrupt_palette_color = 2;
     uint8_t video_palette_color = 3;
-    drawSprite(periodic_sprite, periodic_palette_color); // Periodically
-    drawSprite(interrupt_sprite, interrupt_palette_color); // CMD button.
-    drawSprite(video_interrupt_sprite, video_palette_color); //Every time the screen refreshes.
+    int16_t interrupt_sprite_id = -1;
+    drawSmallSprite(periodic_sprite, periodic_palette_color); // Periodically
+    interrupt_sprite_id = drawSmallSprite(interrupt_sprite, interrupt_palette_color); // CMD button.
+    drawSmallSprite(video_interrupt_sprite, video_palette_color); //Every time the screen refreshes.
     int periodic_switcher = 0;
     int controllerHasUpdate = 0;
     while (1) {
@@ -84,12 +84,6 @@ int main() {
         global = GetTicks();
         
         controllerHasUpdate = 0;
-        /*if (controller_status & 0x1) {
-            //y_pos2-= 10;
-            setSmallColorPalette(0, 0xFF008000, 1);
-            setSmallColorPalette(0, 0xFF008000, 2);
-            setSmallColorPalette(0, 0xFF008000, 3);
-        }*/
         if (global != last_global) {
             if (global % 20 == 0) {
                 if (periodic_switcher) {
@@ -101,26 +95,31 @@ int main() {
                 }
             }
             controller_status = GetController();
-            switch (controller_status) {
-                case 0x1:
-                    y_pos2-= 10;  // Move sprite up
-                    setSmallColorPalette(0, 0xFF008000, 1);
-                    setSmallColorPalette(0, 0xFF008000, 2);
-                    setSmallColorPalette(0, 0xFF008000, 3);
-                    controllerHasUpdate = 1;
-                
-                case 0x2:
-                    y_pos2+= 10;  // Move sprite down
-                    controllerHasUpdate = 1;
-                }
+            if (controller_status & 0x1) {
+                x_pos2 -= 10;
+                controllerHasUpdate = 1;
+            }
+
+            if (controller_status & 0x2) {
+                y_pos2 -= 10;
+                controllerHasUpdate = 1;
+            }
+
+            if (controller_status & 0x4) {
+                y_pos2 += 10;
+                controllerHasUpdate = 1;
+            }
+
+            if (controller_status & 0x8) {
+                x_pos2 += 10;
+                controllerHasUpdate = 1;
+            }
             if (controllerHasUpdate) {
-                //Enable this line to enable deleting sprites.
-                //eraseSprite(pack_sprite_data(sprite_index2, z_position2, y_pos2_old, x_pos2, palette_index2));
+                // Enable this line to enable deleting sprites.
+                eraseSmallSprite(interrupt_sprite_id);
                 interrupt_sprite = pack_sprite_data(sprite_index2, z_position2, y_pos2, x_pos2, palette_index2);
-                
-                drawSprite(interrupt_sprite, interrupt_palette_color);
-                y_pos2_old =  y_pos2;
-                }
+                interrupt_sprite_id = drawSmallSprite(interrupt_sprite, interrupt_palette_color);
+            }
             
             last_global = global;
         }
