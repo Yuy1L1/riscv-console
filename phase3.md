@@ -6,7 +6,23 @@ Things we need to have for the next update:
 
 TODO:
 1. write more func in sprite management
-2. create & write memory_management.c and game_state.c
+2. create & write memory_management.c.
 3. write Makefile for interrupt.c cuz current interrupt func is in startup.c
 4. crt0.s how to assembly coding?
-5. what is stub? not sure, need to ask TA
+5. stub function
+
+System Call Stub Functions
+
+The system call stub functions provide a high-level language interface to a function whose main job is to generate the software interrupt (trap) needed to get the kernel's attention. These functions are often called wrappers.
+
+The stub functions on most operating systems do the same basic steps. While the details of implementation differ, they include the following:
+
+set up the parameters,
+trap to the kernel,
+check the return value when the kernel returns, and
+if no error: return immediately, else
+if there is an error: set a global error number variable (called "errno") and return a value of -1.
+
+6. What is "stub to invoke syscall" in "Baseline Catridge Requirements"?
+
+This is the assembly code that will invoke the ECALL. If you look at the discussion code where we did this in the cartridge you will see for the GetTicks I believe that there is a setting of the a5 register and then the ECALL instruction. This is the stub to call the system call from the function.
