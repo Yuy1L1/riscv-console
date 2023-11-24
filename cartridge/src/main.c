@@ -1,17 +1,18 @@
 #include <stdint.h>
-//#include <stdio.h>
-//#include "startup.h"
+#include <stddef.h>
 
 volatile int global = 42;
 volatile uint32_t controller_status = 0;
 
 #define CATRIDGE_STATUS_REGISTER 0x4000001C
 uint32_t colorEntry = 0xffffffff;
+volatile char *VIDEO_MEMORY = (volatile char *)(0x50000000 + 0xF4800);
 
 uint32_t GetTicks(void);
 uint32_t GetController(void);
 
-uint32_t pack_sprite_data(int index, int z, int y, int x, int palette) {
+// changed from pack sprite data to pack small sprite data
+uint32_t pack_small_sprite_data(int index, int z, int y, int x, int palette) {
     uint32_t packed_data = 0;
 
     // masks for each variable
@@ -34,7 +35,19 @@ uint32_t pack_sprite_data(int index, int z, int y, int x, int palette) {
     return packed_data;
 }
 
-volatile char *VIDEO_MEMORY = (volatile char *)(0x50000000 + 0xF4800);
+
+uint32_t pack_medium_sprite_data(int index, int z, int y, int x, int palette) {
+    uint32_t packed_data = 0;
+    //TODO
+    return packed_data;
+}
+
+uint32_t pack_large_sprite_data(int index, int z, int y, int x, int palette) {
+    uint32_t packed_data = 0;
+    //TODO
+    return packed_data;
+}
+
 
 int main() {
     int a = 4;
@@ -51,21 +64,21 @@ int main() {
     int y_pos1 = 200;
     int x_pos1 = 200;
     int palette_index1 = 0;
-    uint32_t periodic_sprite = pack_sprite_data(sprite_index1, z_position1, y_pos1, x_pos1, palette_index1);
+    uint32_t periodic_sprite = pack_small_sprite_data(sprite_index1, z_position1, y_pos1, x_pos1, palette_index1);
 
     int sprite_index2 = 1;
     int z_position2 = 2;
     int y_pos2 = 200;
     int x_pos2 = 300;
     int palette_index2 = 0;
-    uint32_t interrupt_sprite = pack_sprite_data(sprite_index2, z_position2, y_pos2, x_pos2, palette_index2);    
+    uint32_t interrupt_sprite = pack_small_sprite_data(sprite_index2, z_position2, y_pos2, x_pos2, palette_index2);    
 
     int sprite_index3 = 2;
     int z_position3 = 2;
     int y_pos3 = 100;
     int x_pos3 = 250;
     int palette_index3 = 0;
-    uint32_t video_interrupt_sprite = pack_sprite_data(sprite_index3, z_position3, y_pos3, x_pos3, palette_index3);
+    uint32_t video_interrupt_sprite = pack_small_sprite_data(sprite_index3, z_position3, y_pos3, x_pos3, palette_index3);
 
     setSmallColorPalette(0, 0xFFFF0000, 1);
     setSmallColorPalette(0, 0xFF0000FF, 2);
@@ -79,6 +92,7 @@ int main() {
     drawSmallSprite(video_interrupt_sprite, video_palette_color); //Every time the screen refreshes.
     int periodic_switcher = 0;
     int controllerHasUpdate = 0;
+
     while (1) {
         int c = a + b + global;
         global = GetTicks();
@@ -117,12 +131,14 @@ int main() {
             if (controllerHasUpdate) {
                 // Enable this line to enable deleting sprites.
                 eraseSmallSprite(interrupt_sprite_id);
-                interrupt_sprite = pack_sprite_data(sprite_index2, z_position2, y_pos2, x_pos2, palette_index2);
+                interrupt_sprite = pack_small_sprite_data(sprite_index2, z_position2, y_pos2, x_pos2, palette_index2);
                 interrupt_sprite_id = drawSmallSprite(interrupt_sprite, interrupt_palette_color);
             }
             
             last_global = global;
         }
+        //TODO: call up funcs related to medium and large size sprites
     }
     return 0;
+
 }
