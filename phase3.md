@@ -4,12 +4,12 @@ Things we need to have for the next update:
 3. baseline cartridge project, including Makefile, crt0.s, func stubs, header file.
 4. Makefile for firmware at least, should be more than that.
 
-TODO:
-1. write more func in sprite management
-2. create & write memory_management.c.
-3. write Makefile for interrupt.c cuz current interrupt func is in startup.c
-4. crt0.s how to assembly coding?
-5. stub function
+What we need to talk about:
+1. discussion 11-06, crt0.s and main.c. Newly added funcs and assembly code
+2. multi thread funcs: need to implement how?
+3. create Makefile to compile
+4. create header files
+5. baseline cartridge project: like the one Dedeboy has. a separate dir with all the standard stuff
 
 System Call Stub Functions
 
