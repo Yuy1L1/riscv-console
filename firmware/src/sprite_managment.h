@@ -1,3 +1,6 @@
+#ifndef SPRITE_MANAGEMENT_H
+#define SPRITE_MANAGEMENT_H
+
 #include <stdlib.h>
 #include <stdio.h>
 
@@ -22,3 +25,5 @@
 
 int setGraphicMode();
 uint16_t drawSprite(uint32_t sprite_control_structure);
+
+#endif

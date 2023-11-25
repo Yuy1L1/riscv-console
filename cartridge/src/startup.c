@@ -217,7 +217,6 @@ int16_t drawMediumSprite(uint32_t sprite_control_structure, uint8_t sprite_color
 }
 
 void eraseMediumSprite(uint8_t slot) {
-
     if (slot >= 64) {
         return;
     }
@@ -276,7 +275,7 @@ int16_t drawLargeSprite(uint32_t sprite_control_structure, uint8_t sprite_color)
     return slot;
 }
 
-void eraseLargeSprite(u_int8_t slot){
+void eraseLargeSprite(uint8_t slot){
     if (slot >= 64) {
         return;
     }
@@ -347,20 +346,4 @@ void setTextColorPalette(uint16_t entry_number, uint32_t background_color, uint3
     *background_palette = foreground_color;
     return 1;
 }
-
-
-//TODO: -> another file: MEMORY MANAGEMENT
-int memset(int size){
-    // TODO
-    return 1;
-}
-
-bool memcpy(){
-    return 1;
-}
-
-bool memmove(){
-    return 1;
-}
-
 
