@@ -35,18 +35,95 @@ uint32_t pack_small_sprite_data(int index, int z, int y, int x, int palette) {
     return packed_data;
 }
 
-
-uint32_t pack_medium_sprite_data(int index, int z, int y, int x, int palette) {
+// the func to pack both medium and large sprite data
+uint32_t pack_med_large_sprite_data( int reserved, int index, int z, int y, int x, int palette) {
     uint32_t packed_data = 0;
-    //TODO
+    // masks for each variable
+    uint32_t reserved_mask = 0x7;     // reserve fits 3 bits
+    uint32_t index_mask = 0x1F;       // Index fits in 5 bits
+    uint32_t z_mask = 0x7;            // Z fits in 3 bits
+    uint32_t y_mask = 0x1FF;          // Y fits in 9 bits
+    uint32_t x_mask = 0x3FF;          // X fits in 10 bits
+    uint32_t palette_mask = 0x3;      // Palette fits in 2 bits
+    reserved &= reserved_mask;
+    index &= index_mask;
+    z &= z_mask;
+    y &= y_mask;
+    x &= x_mask;
+    palette &= palette_mask;
+
+    packed_data |= (reserved << 30);  // reserved in bits 31..30
+    packed_data |= (index << 24); // Index in bits 29..24
+    packed_data |= (z << 21);     // Z in bits 23..21
+    packed_data |= (y << 12);     // Y in bits 20..12
+    packed_data |= (x << 2);      // X in bits 11..2
+    packed_data |= palette;       // Palette in bits 1..0
     return packed_data;
 }
 
-uint32_t pack_large_sprite_data(int index, int z, int y, int x, int palette) {
+// for mode 0 of background
+// px stands for pixel mode
+uint32_t pack_background_sprite_data(int mode, int px_index, int reserved, int z, int y, int x, int palette){
     uint32_t packed_data = 0;
-    //TODO
+
+    // masks for each variable
+    uint32_t mode_mask = 0x1;         // mode 1 bits
+    uint32_t reserved_mask = 0x3;     // px idx fits 2 bits
+    uint32_t px_index_mask = 0xF;       // reserved fits in 4 bits
+    uint32_t z_mask = 0x7;            // Z fits in 3 bits
+    uint32_t y_mask = 0x3FF;          // Y fits in 10 bits
+    uint32_t x_mask = 0x3FF;          // X fits in 10 bits
+    uint32_t palette_mask = 0x3;      // Palette fits in 2 bits
+    mode &= mode_mask;
+    reserved &= reserved_mask;
+    px_index &= px_index_mask;
+    z &= z_mask;
+    y &= y_mask;
+    x &= x_mask;
+    palette &= palette_mask;
+
+    packed_data |= (reserved << 31);  // modein bits 31
+    packed_data |= (reserved << 29);  // Px Idx in bits 30..29
+    packed_data |= (px_index << 25); // reserved in bits 28..25
+    packed_data |= (z << 22);     // Z in bits 24..22
+    packed_data |= (y << 12);     // Y in bits 21..12
+    packed_data |= (x << 2);      // X in bits 11..2
+    packed_data |= palette;       // Palette in bits 1..0
     return packed_data;
 }
+
+// for mode 1 of background
+// ti stands for tile
+uint32_t pack_background_sprite_data(int mode, int ti_index, int sub_idx, int z, int y, int x, int palette){
+    uint32_t packed_data = 0;
+
+    // masks for each variable
+    uint32_t mode_mask = 0x1;         // mode 1 bits
+    uint32_t ti_idx_mask = 0x7;     // ti idx fits 3 bits
+    uint32_t sub_index_mask = 0x7;       // sub idx fits in 3 bits
+    uint32_t z_mask = 0x7;            // Z fits in 3 bits
+    uint32_t y_mask = 0x3FF;          // Y fits in 10 bits
+    uint32_t x_mask = 0x3FF;          // X fits in 10 bits
+    uint32_t palette_mask = 0x3;      // Palette fits in 2 bits
+    mode &= mode_mask;
+    ti_index &= ti_idx_mask;
+    sub_idx &= sub_index_mask;
+    z &= z_mask;
+    y &= y_mask;
+    x &= x_mask;
+    palette &= palette_mask;
+
+    packed_data |= (mode << 31);  // modein bits 31
+    packed_data |= (ti_index << 28);  // ti Idx in bits 30..28
+    packed_data |= (sub_idx << 25); // sub idx in bits 27..25
+    packed_data |= (z << 22);     // Z in bits 24..22
+    packed_data |= (y << 12);     // Y in bits 21..12
+    packed_data |= (x << 2);      // X in bits 11..2
+    packed_data |= palette;       // Palette in bits 1..0
+    return packed_data;
+}
+
+
 
 
 int main() {
