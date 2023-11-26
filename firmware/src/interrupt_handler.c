@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include "interrupt_handler.h"
 #include "memory_management.h"
+#include "sprite_managment.h"
 
 volatile int video_counter = 0;
 
@@ -20,11 +21,11 @@ void delay_ms(unsigned int milliseconds) {
     }
 }
 
-int setSmallColorPalette(uint32_t palette_number, uint32_t color, uint32_t entry_number) {
+/*int setSmallColorPalette(uint32_t palette_number, uint32_t color, uint32_t entry_number) {
     volatile uint32_t *palette = (volatile uint32_t *) (SMALL_SPRITE_PALETTE_ADDR + (0x400) * palette_number + (0x4) * entry_number);  
     memmove((unsigned char*) palette, (unsigned char*) &color, 4);
     return 1;
-}
+}*/
 
 uint32_t counter = 0;
 uint8_t currentColorIndex = 0;

@@ -46,7 +46,7 @@ void do_nothing() {
     delay_ms(1000);
     int *p = NULL;  // Initialize a pointer to NULL
     *p = 10;        // Try to write to the NULL pointer
-    return 0;
+    return;
 }
 
 void init(void) {
