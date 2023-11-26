@@ -1,15 +1,14 @@
 #include <stdint.h>
 #include <stddef.h>
 
+#include "api.h"
+
 volatile int global = 42;
 volatile uint32_t controller_status = 0;
 
 #define CATRIDGE_STATUS_REGISTER 0x4000001C
 uint32_t colorEntry = 0xffffffff;
 volatile char *VIDEO_MEMORY = (volatile char *)(0x50000000 + 0xF4800);
-
-uint32_t GetTicks(void);
-uint32_t GetController(void);
 
 // changed from pack sprite data to pack small sprite data
 uint32_t pack_small_sprite_data(int index, int z, int y, int x, int palette) {
@@ -35,7 +34,6 @@ uint32_t pack_small_sprite_data(int index, int z, int y, int x, int palette) {
     return packed_data;
 }
 
-
 uint32_t pack_medium_sprite_data(int index, int z, int y, int x, int palette) {
     uint32_t packed_data = 0;
     //TODO
@@ -47,7 +45,6 @@ uint32_t pack_large_sprite_data(int index, int z, int y, int x, int palette) {
     //TODO
     return packed_data;
 }
-
 
 int main() {
     int a = 4;
@@ -83,6 +80,7 @@ int main() {
     setSmallColorPalette(0, 0xFFFF0000, 1);
     setSmallColorPalette(0, 0xFF0000FF, 2);
     setSmallColorPalette(0, 0xFF0000FF, 3);
+
     uint8_t periodic_palette_color = 1;
     uint8_t interrupt_palette_color = 2;
     uint8_t video_palette_color = 3;

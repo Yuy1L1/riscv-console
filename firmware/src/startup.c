@@ -87,6 +87,9 @@ uint32_t c_system_call(uint32_t arg0, uint32_t arg1, uint32_t arg2, uint32_t arg
         return global;
     } else if (call == 2) {
         return controller_status;
+    } else if (call == 3) {
+        memmove((unsigned char*)arg0, (unsigned char*)arg1, (int)arg2);
+        return 1;
     }
 
     return -1;

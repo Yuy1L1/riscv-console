@@ -25,11 +25,3 @@ _interrupt_handler:
     lw	    a5,0(sp)
     addi    sp,sp,40
     mret
-
-.global GetTicks, GetController
-GetTicks:
-    li a5, 1
-    ecall
-GetController:
-    li a5, 2
-    ecall

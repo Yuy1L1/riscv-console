@@ -1,6 +1,8 @@
 #include <stdint.h>
 #include <stdbool.h>
 
+#include "api.h"
+
 extern uint8_t _erodata[];
 extern uint8_t _data[];
 extern uint8_t _edata[];
@@ -112,7 +114,7 @@ int setSmallColorPalette(uint32_t palette_number, uint32_t color, uint32_t entry
     // each entry is worth 4 B -> 0x4
     // color is for the RGB val, entry_number is for which entry in the palette to change
     volatile uint32_t *palette = (volatile uint32_t *) (SMALL_SPRITE_PALETTE_ADDR + (0x400) * palette_number + (0x4) * entry_number);  
-    *palette = color;
+    MemMove((unsigned char*) palette, (unsigned char*) &color, 4);
     return 1;
 }
 

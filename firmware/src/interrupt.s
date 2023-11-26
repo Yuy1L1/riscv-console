@@ -48,3 +48,15 @@ _system_call:
     call    c_system_call
     csrr    gp,mscratch
     mret
+
+.global GetTicks, GetController, MemMove
+
+GetTicks:
+    li a5, 1
+    ecall
+GetController:
+    li a5, 2
+    ecall
+MemMove:
+    li a5, 3
+    ecall
