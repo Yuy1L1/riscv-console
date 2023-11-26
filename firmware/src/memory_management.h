@@ -7,5 +7,7 @@ void memcpy(unsigned char* dest, unsigned char* src, int count);
 
 void memmove(unsigned char* dest, unsigned char* src, int count);
 
-char* _sbrk(int numbytes);
+char* _sbrk(int incr);
+
+void* our_malloc(size_t size);
 #endif

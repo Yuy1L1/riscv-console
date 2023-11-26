@@ -38,6 +38,8 @@ TARGET_OBJS =   $(OBJ_DIR)/main.o               \
 				$(OBJ_DIR)/memory_management.o          \
 				$(OBJ_DIR)/interrupt_handler.o          \
 				$(OBJ_DIR)/sprite_management.o          \
+				$(OBJ_DIR)/thread.o          \
+				$(OBJ_DIR)/threads.o          \
                 $(OBJ_DIR)/startup.o
 
 all: directories $(BIN_DIR)/$(TARGET_NAME)

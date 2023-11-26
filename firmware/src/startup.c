@@ -3,6 +3,7 @@
 
 #include "memory_management.h"
 #include "interrupt_handler.h"
+#include "thread.h"
 
 extern uint8_t _erodata[];
 extern uint8_t _data[];
@@ -41,11 +42,19 @@ __attribute__((always_inline)) inline void csr_disable_interrupts(void){
 #define MTIMECMP_HIGH   (*((volatile uint32_t *)0x40000014))
 #define CONTROLLER      (*((volatile uint32_t *)0x40000018))
 
+void do_nothing() {
+    delay_ms(1000);
+    int *p = NULL;  // Initialize a pointer to NULL
+    *p = 10;        // Try to write to the NULL pointer
+    return 0;
+}
 
 void init(void) {
     uint8_t *Source = _erodata;
     uint8_t *Base = _data < _sdata ? _data : _sdata;
     uint8_t *End = _edata > _esdata ? _edata : _esdata;
+
+    int new_thread = initThread(1, 100, NULL, &do_nothing);
 
     while(Base < End){
         *Base++ = *Source++;

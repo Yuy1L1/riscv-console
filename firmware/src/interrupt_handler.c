@@ -10,7 +10,7 @@ volatile uint32_t *INTERRUPT_ENABLE_REGISTER = (volatile uint32_t*)(0x40000000);
 volatile uint32_t *INTERRUPT_PENDING_REGISTER = (volatile uint32_t*)(0x40000004);
 
 void delay_ms(unsigned int milliseconds) {
-    unsigned int factor = 1000; // This factor needs calibration
+    unsigned int factor = 1000;
     volatile unsigned int count;
 
     for (; milliseconds > 0; milliseconds--) {
