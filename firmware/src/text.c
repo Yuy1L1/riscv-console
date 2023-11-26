@@ -1,4 +1,4 @@
-#define TEXT_PALETTE_ADDR 0x500F6700
+#include "text.h"
 
 
 int setTextMode() {
