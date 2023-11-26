@@ -430,22 +430,38 @@ void eraseBackgroundSprite(uint8_t slot, uint32_t mode){
     }
 }
 
-// TODO: -> another file: TEXT MODE
+// TODO: ===================================================-> another file: TEXT MODE
+
 #define TEXT_PALETTE_ADDR 0x500F6700
 
-void drawText() {
+
+int setTextMode() {
+    // default mode: 0, text mode
+    volatile uint32_t *mode_control_register = (volatile uint32_t*) MODE_CONTROL_REGISTER;
+    // printf("%x", curr_mode);
+    *mode_control_register &= 0x00;
+    
+    return 0;
+}
+
+
+void drawText(char *input_str){
+    for (int i = 0; i < strlen(input_str); i++)
+    {
+        int ascii = (int) input_str[i];
+        if (ascii >= 33 && ascii <=126)
+        {
+            // TODO: how to write to screen?
+        }
+    }
+    
+}
+
+void eraseText(){
     //TODO
 }
 
-void eraseText() {
-    //TODO
-}
-
-void changeTextColor() {
-    //TODO
-}
-
-void setTextColorPalette(uint16_t entry_number, uint32_t background_color, uint32_t foreground_color) {
+void setTextColorPalette(uint16_t entry_number, uint32_t background_color, uint32_t foreground_color){
     //the first 16-entry palettes. 
     // from 0x500F6700 to 0x500F673C
     // each entry is of 4B size -> 0x4
