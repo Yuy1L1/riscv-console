@@ -90,6 +90,10 @@ uint32_t c_system_call(uint32_t arg0, uint32_t arg1, uint32_t arg2, uint32_t arg
     } else if (call == 3) {
         memmove((unsigned char*)arg0, (unsigned char*)arg1, (int)arg2);
         return 1;
+    } else if (call == 4) {
+        memset((unsigned char*)arg0, (unsigned char)arg1, (int)arg2);
+    } else if (call == 5) {
+        memcpy((unsigned char*)arg0, (unsigned char*)arg1, (int)arg2);
     }
 
     return -1;

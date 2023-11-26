@@ -12,25 +12,25 @@ extern uint8_t _bss[];
 extern uint8_t _ebss[];
 
 // Adapted from https://stackoverflow.com/questions/58947716/how-to-interact-with-risc-v-csrs-by-using-gcc-c-code
-__attribute__((always_inline)) inline uint32_t csr_mstatus_read(void){
+__attribute__((always_inline)) inline uint32_t csr_mstatus_read(void) {
     uint32_t result;
     asm volatile ("csrr %0, mstatus" : "=r"(result));
     return result;
 }
 
-__attribute__((always_inline)) inline void csr_mstatus_write(uint32_t val){
+__attribute__((always_inline)) inline void csr_mstatus_write(uint32_t val) {
     asm volatile ("csrw mstatus, %0" : : "r"(val));
 }
 
-__attribute__((always_inline)) inline void csr_write_mie(uint32_t val){
+__attribute__((always_inline)) inline void csr_write_mie(uint32_t val) {
     asm volatile ("csrw mie, %0" : : "r"(val));
 }
 
-__attribute__((always_inline)) inline void csr_enable_interrupts(void){
+__attribute__((always_inline)) inline void csr_enable_interrupts(void) {
     asm volatile ("csrsi mstatus, 0x8");
 }
 
-__attribute__((always_inline)) inline void csr_disable_interrupts(void){
+__attribute__((always_inline)) inline void csr_disable_interrupts(void) {
     asm volatile ("csrci mstatus, 0x8");
 }
 
@@ -69,17 +69,17 @@ extern volatile uint32_t controller_status;
 #define LARGE_SPRITE_PALETTE_ADDR      0x500F1000
 #define BACKGROUND_SPRITE_PALETTE_ADDR 0x500F0000
 
-void init(void){
+void init(void) {
     uint8_t *Source = _erodata;
     uint8_t *Base = _data < _sdata ? _data : _sdata;
     uint8_t *End = _edata > _esdata ? _edata : _esdata;
 
-    while(Base < End){
+    while(Base < End) {
         *Base++ = *Source++;
     }
     Base = _bss;
     End = _ebss;
-    while(Base < End){
+    while(Base < End) {
         *Base++ = 0;
     }
 }
@@ -118,7 +118,7 @@ int setSmallColorPalette(uint32_t palette_number, uint32_t color, uint32_t entry
     return 1;
 }
 
-void changeSmallSpriteColor(){
+void changeSmallSpriteColor() {
     // TODO: is there really a diff btw set and change?
 }
 
@@ -169,7 +169,7 @@ void eraseSmallSprite(uint8_t slot) {
     small_sprite_slot_in_use[slot] = false;
 }
 
-void moveSmallSprite(uint8_t slot, uint32_t sprite_control_structure, uint8_t sprite_color){
+void moveSmallSprite(uint8_t slot, uint32_t sprite_control_structure, uint8_t sprite_color) {
     // TODO: can I move the obj directly or erase the one now and redraw it at the the new site?
     // first get rid of the current one
     eraseSmallSprite(slot);
@@ -235,7 +235,7 @@ void eraseMediumSprite(uint8_t slot) {
     medium_sprite_slot_in_use[slot] = false;
 }
 
-void changeMediumSpriteColor(){
+void changeMediumSpriteColor() {
     //TODO
 }
 
@@ -249,7 +249,7 @@ int setLargeColorPalette(uint32_t palette_number, uint32_t color, uint32_t entry
 
 bool large_sprite_slot_in_use[64] = {false};
 
-int16_t drawLargeSprite(uint32_t sprite_control_structure, uint8_t sprite_color){
+int16_t drawLargeSprite(uint32_t sprite_control_structure, uint8_t sprite_color) {
     int slot = -1;
     for (int i = 0; i < 64; i++) {
         if (!large_sprite_slot_in_use[i]) {
@@ -277,7 +277,7 @@ int16_t drawLargeSprite(uint32_t sprite_control_structure, uint8_t sprite_color)
     return slot;
 }
 
-void eraseLargeSprite(uint8_t slot){
+void eraseLargeSprite(uint8_t slot) {
     if (slot >= 64) {
         return;
     }
@@ -294,11 +294,11 @@ void eraseLargeSprite(uint8_t slot){
     large_sprite_slot_in_use[slot] = false;
 }
 
-void changeLargeSpriteColor(){
+void changeLargeSpriteColor() {
     // TODO
 }
 
-void c_interrupt_handler(void){
+void c_interrupt_handler(void) {
     uint64_t NewCompare = (((uint64_t)MTIMECMP_HIGH)<<32) | MTIMECMP_LOW;
     NewCompare += 100;
     MTIMECMP_HIGH = NewCompare>>32;
@@ -307,7 +307,7 @@ void c_interrupt_handler(void){
     controller_status = CONTROLLER;
 }
 
-int setBackgroundColorPalette(uint32_t palette_number, uint32_t color, uint32_t entry_number){
+int setBackgroundColorPalette(uint32_t palette_number, uint32_t color, uint32_t entry_number) {
     // each palette is of 1 KiB size 1 KiB = 1024 B = 0x400
     // each entry is worth 4 B -> 0x4 in the memory map
     // color is for the RGB val, entry_number is for which entry in the palette to change
@@ -316,7 +316,7 @@ int setBackgroundColorPalette(uint32_t palette_number, uint32_t color, uint32_t 
     return 1;
 }
 
-int changeBackgroundColorPalette(){
+int changeBackgroundColorPalette() {
     // TODO: is there really a diff btw set and change?
     return 1;
 }
@@ -324,19 +324,19 @@ int changeBackgroundColorPalette(){
 // TODO: -> another file: TEXT MODE
 #define TEXT_PALETTE_ADDR 0x500F6700
 
-void drawText(){
+void drawText() {
     //TODO
 }
 
-void eraseText(){
+void eraseText() {
     //TODO
 }
 
-void changeTextColor(){
+void changeTextColor() {
     //TODO
 }
 
-void setTextColorPalette(uint16_t entry_number, uint32_t background_color, uint32_t foreground_color){
+void setTextColorPalette(uint16_t entry_number, uint32_t background_color, uint32_t foreground_color) {
     //the first 16-entry palettes. 
     // from 0x500F6700 to 0x500F673C
     // each entry is of 4B size -> 0x4
