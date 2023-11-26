@@ -1,5 +1,6 @@
 #include "text.h"
 
+volatile char *VIDEO_MEMORY = (volatile char *)(GRAPHICS_MEMORY + 0xF4800);
 
 int setTextMode() {
     // default mode: 0, text mode
@@ -8,23 +9,6 @@ int setTextMode() {
     *mode_control_register &= 0x00;
     
     return 0;
-}
-
-
-void drawText(char *input_str){
-    for (int i = 0; i < strlen(input_str); i++)
-    {
-        int ascii = (int) input_str[i];
-        if (ascii >= 33 && ascii <=126)
-        {
-            // TODO: how to write to screen?
-        }
-    }
-    
-}
-
-void eraseText(){
-    //TODO
 }
 
 void setTextColorPalette(uint16_t entry_number, uint32_t background_color, uint32_t foreground_color){
@@ -39,3 +23,21 @@ void setTextColorPalette(uint16_t entry_number, uint32_t background_color, uint3
     *background_palette = foreground_color;
     return 1;
 }
+
+void drawText(char *input_str){
+    for (int i = 0; i < strlen(input_str); i++)
+    {
+        int str_ascii = (int) input_str[i];
+        if (str_ascii >= 33 && str_ascii <=126)
+        {
+            strcpy(input_str, "OS STARTED");
+            strcpy((char *) VIDEO_MEMORY, input_str);
+        }
+    }
+}
+
+void eraseText(){
+    //TODO: call memset?
+
+}
+
