@@ -1,6 +1,6 @@
 #ifndef THREAD_H
 #define THREAD_H
-
+#include "stdint.h"
 typedef enum {
     THREAD_NEW,
     THREAD_RUNNING,
@@ -17,6 +17,7 @@ struct TCB {
     uint8_t* stack_base;
     unsigned int threadID;
 };
+extern int num_of_threads;
 
 int initThread(int priority, uint32_t memsize, void* param, void (*threadFunction)(void *));
 

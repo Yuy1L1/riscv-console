@@ -4,6 +4,7 @@
 #include "thread.h"
 #include "memory_management.h"
 volatile int next_thread_id = 0;
+int num_of_threads = 0;
 
 int initThread(int priority, uint32_t memsize, void* param, void (*threadFunction)(void *)) {
     uint8_t* stack_base = our_malloc(memsize);
@@ -13,5 +14,6 @@ int initThread(int priority, uint32_t memsize, void* param, void (*threadFunctio
     tcb->threadID = next_thread_id++;
     tcb->stack_base = stack_base;
     tcb->stack_pointer = InitThread(tcb->stack_base+memsize, param);
+    num_of_threads++;
 }
 
