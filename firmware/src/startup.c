@@ -2,6 +2,7 @@
 #include <stdio.h>
 
 #include "memory_management.h"
+#include "sprite_management.h"
 #include "interrupt_handler.h"
 #include "thread.h"
 
@@ -103,7 +104,97 @@ uint32_t c_system_call(uint32_t arg0, uint32_t arg1, uint32_t arg2, uint32_t arg
         memset((unsigned char*)arg0, (unsigned char)arg1, (int)arg2);
     } else if (call == 5) {
         memcpy((unsigned char*)arg0, (unsigned char*)arg1, (int)arg2);
+    } else if (call == 6) {
+        // TODO -> implement the following syscalls
+        // Functionality for OPERATION_SETTING
+    } else if (call == 7) {
+        // Functionality for PHYSICS_SIMULATION
+    } else if (call == 8) {
+        // Functionality for SECURITY_CHECK
+    } else if (call == 9) {
+        // Functionality for IMPORT_EXPORT
+    } else if (call == 10) {
+        // Functionality for ADD_HOTKEY
+    } else if (call == 11) {
+        // Functionality for MULTIPLE_KEY_CHECK
+    } else if (call == 12) {
+        // Functionality for REMOVE_HOTKEY
+    } else if (call == 13) {
+        handle_cmd_interrupt();
+    } else if (call == 14) {
+        handle_video_interrupt();
+    } else if (call == 15) {
+        // Functionality for CARTRIDGE_INTERRUPT
+    } else if (call == 16) {
+        // Functionality for ILLEGAL_INST_INTERRUPT
+    } else if (call == 17) {
+        // Functionality for TIMER_INTERRUPT
+    } else if (call == 18) {
+        return setGraphicMode();
+    } else if (call == 19) {
+        return setSmallColorPalette((uint32_t)arg0, (uint32_t)arg1, (uint32_t)arg2);
+    } else if (call == 20) {
+        changeSmallSpriteColor();
+    } else if (call == 21) {
+        return drawSprite(arg0);
+    } else if (call == 22) {
+        eraseSmallSprite((uint8_t)arg0);
+    } else if (call == 23) {
+        moveSmallSprite((uint8_t)arg0, arg1, (uint8_t)arg2);
+    } else if (call == 24) {
+        return setMediumColorPalette(arg0, arg1, arg2);
+    } else if (call == 25) {
+        return drawMediumSprite(arg0, (uint8_t)arg1);
+    } else if (call == 26) {
+        eraseMediumSprite((uint8_t)arg0);
+    } else if (call == 27) {
+        changeMediumSpriteColor();
+    } else if (call == 28) {
+        return setLargeColorPalette(arg0, arg1, arg2);
+    } else if (call == 29) {
+        return drawLargeSprite(arg0, (uint8_t)arg1);
+    } else if (call == 30) {
+        eraseLargeSprite((uint8_t)arg0);
+    } else if (call == 31) {
+        changeLargeSpriteColor();
+    } else if (call == 32) {
+        return setBackgroundColorPalette(arg0, arg1, arg2);
+    } else if (call == 33) {
+        return changeBackgroundColorPalette();
+    } else if (call == 34) {
+        return drawBackgroundSprite(arg0, (uint8_t)arg1, arg2);
+    } else if (call == 35) {
+        eraseBackgroundSprite((uint8_t)arg0, arg2);
+    } else if (call == 36) {
+        // EMULATOR
+        continue;
+    } else if (call == 37) {
+        // CHECK_LOCATION
+        continue;
+    } else if (call == 38) {
+        // CHECK_CONTROLLER
+        continue;
+    } else if (call == 39) {
+        // NUM_CONTROLLERS
+        continue;
+    } else if (call == 40) {
+        // RAND_NUM
+        continue;
+    } else if (call == 41) {
+        // GET_TICKS_UTILS
+        continue;
+    } else if (call == 42) {
+        // GET_CONTROLLER_UTILS
+        continue;
+    } else if (call == 43) {
+        // LOAD_PREVIOUS_STATE
+        continue;
+    } else if (call == 44) {
+        // SET_TEXT_MODE
+        continue;
+    } else if (call == 45) {
+        // INIT_THREAD
+        return initThread((int)arg0, arg1, (void*)arg2, (void (*)(void *))arg3);
     }
-
     return -1;
 }
