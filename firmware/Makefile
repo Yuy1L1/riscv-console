@@ -39,6 +39,7 @@ TARGET_OBJS =   $(OBJ_DIR)/main.o               \
 				$(OBJ_DIR)/interrupt_handler.o          \
 				$(OBJ_DIR)/sprite_management.o          \
 				$(OBJ_DIR)/thread.o          \
+				$(OBJ_DIR)/scheduler.o          \
 				$(OBJ_DIR)/threads.o          \
                 $(OBJ_DIR)/startup.o
 
