@@ -130,13 +130,13 @@ uint32_t c_system_call(uint32_t arg0, uint32_t arg1, uint32_t arg2, uint32_t arg
     } else if (call == 17) {
         // Functionality for TIMER_INTERRUPT
     } else if (call == 18) {
-        return setGraphicMode();
+        return setGraphicsMode();
     } else if (call == 19) {
         return setSmallColorPalette((uint32_t)arg0, (uint32_t)arg1, (uint32_t)arg2);
     } else if (call == 20) {
-        changeSmallSpriteColor();
+        // changeSmallSpriteColor();
     } else if (call == 21) {
-        return drawSprite(arg0);
+        return drawSmallSprite((uint32_t)arg0, (uint8_t)arg1);
     } else if (call == 22) {
         eraseSmallSprite((uint8_t)arg0);
     } else if (call == 23) {
@@ -167,31 +167,22 @@ uint32_t c_system_call(uint32_t arg0, uint32_t arg1, uint32_t arg2, uint32_t arg
         eraseBackgroundSprite((uint8_t)arg0, arg2);
     } else if (call == 36) {
         // EMULATOR
-        continue;
     } else if (call == 37) {
         // CHECK_LOCATION
-        continue;
     } else if (call == 38) {
         // CHECK_CONTROLLER
-        continue;
     } else if (call == 39) {
         // NUM_CONTROLLERS
-        continue;
     } else if (call == 40) {
         // RAND_NUM
-        continue;
     } else if (call == 41) {
         // GET_TICKS_UTILS
-        continue;
     } else if (call == 42) {
         // GET_CONTROLLER_UTILS
-        continue;
     } else if (call == 43) {
         // LOAD_PREVIOUS_STATE
-        continue;
     } else if (call == 44) {
         // SET_TEXT_MODE
-        continue;
     } else if (call == 45) {
         // INIT_THREAD
         return initThread((int)arg0, arg1, (void*)arg2, (void (*)(void *))arg3);

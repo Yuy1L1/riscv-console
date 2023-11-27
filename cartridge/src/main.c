@@ -105,6 +105,50 @@ uint32_t pack_background_sprite_data(int mode, int index1, int index2, int z, in
     return packed_data;
 }
 
+#define SMALL_SPRITE_DATA_ADDR  0x500E0000
+#define SMALL_SPRITE_DATA_SIZE  0x100 
+#define SMALL_SPRITE_CONTROL_ADDR  0x500F6300
+#define SMALL_SPRITE_CONTROL_SIZE  0x4 
+#define SMALL_SPRITE_PALETTE_ADDR      0x500F3000
+uint32_t small_sprite_counter = 0;
+
+
+int setSmallColorPalette2(uint32_t palette_number, uint32_t color, uint32_t entry_number) {
+    volatile uint32_t *palette = (volatile uint32_t *) (SMALL_SPRITE_PALETTE_ADDR + (0x400) * palette_number + (0x4) * entry_number);  
+    MemMove((unsigned char*) palette, (unsigned char*) &color, 4);
+    return 1;
+}
+
+bool small_sprite_slot_in_use[256] = {false};
+
+uint16_t drawSmallSprite2(uint32_t sprite_control_structure, uint8_t sprite_color) {
+    int slot = -1;
+    for (int i = 0; i < 256; i++) {
+        if (!small_sprite_slot_in_use[i]) {
+            slot = i;
+            break;
+        }
+    }
+
+    if (slot == -1) {
+        return -1; // No available slot
+    }
+
+    small_sprite_slot_in_use[slot] = true;
+
+    uint8_t index = (sprite_control_structure >> 24) & 0xFF;
+    uint8_t* small_data_addr = (volatile uint32_t *)(SMALL_SPRITE_DATA_ADDR + slot * SMALL_SPRITE_DATA_SIZE);
+    for (int k = 0; k < 256; k++) {
+        *(small_data_addr + k) = sprite_color;
+    }
+
+    uint32_t *small_control_addr = (volatile uint32_t *)(SMALL_SPRITE_CONTROL_ADDR + slot * SMALL_SPRITE_CONTROL_SIZE);
+    *small_control_addr = sprite_control_structure;
+    small_sprite_counter++;
+
+    return slot;
+}
+
 int main() {
     int a = 4;
     int b = 12;
@@ -144,9 +188,9 @@ int main() {
     uint8_t interrupt_palette_color = 2;
     uint8_t video_palette_color = 3;
     int16_t interrupt_sprite_id = -1;
-    drawSmallSprite(periodic_sprite, periodic_palette_color); // Periodically
-    interrupt_sprite_id = drawSmallSprite(interrupt_sprite, interrupt_palette_color); // CMD button.
-    drawSmallSprite(video_interrupt_sprite, video_palette_color); //Every time the screen refreshes.
+    drawSmallSprite2(periodic_sprite, periodic_palette_color); // Periodically
+    interrupt_sprite_id = drawSmallSprite2(interrupt_sprite, interrupt_palette_color); // CMD button.
+    drawSmallSprite2(video_interrupt_sprite, video_palette_color); //Every time the screen refreshes.
     int periodic_switcher = 0;
     int controllerHasUpdate = 0;
 
@@ -189,7 +233,7 @@ int main() {
                 // Enable this line to enable deleting sprites.
                 eraseSmallSprite(interrupt_sprite_id);
                 interrupt_sprite = pack_small_sprite_data(sprite_index2, z_position2, y_pos2, x_pos2, palette_index2);
-                interrupt_sprite_id = drawSmallSprite(interrupt_sprite, interrupt_palette_color);
+                interrupt_sprite_id = drawSmallSprite2(interrupt_sprite, interrupt_palette_color);
             }
             
             last_global = global;

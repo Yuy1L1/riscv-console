@@ -1,14 +1,13 @@
-#include "sprite_managment.h"
+#include "sprite_management.h"
 
 uint32_t small_sprite_counter = 0;
 uint32_t medium_sprite_counter = 0;
 uint32_t large_sprite_counter = 0;
 uint32_t background_sprite_counter = 0;
 
-int setGraphicMode(){
+int setGraphicsMode() {
     // default mode: 0, text mode
     uint32_t curr_mode = *((volatile uint32_t *) MODE_CONTROL_REGISTER);
-    printf("%x", curr_mode);
     curr_mode |=1;
     return 0;
 }
@@ -24,7 +23,7 @@ int setSmallColorPalette(uint32_t palette_number, uint32_t color, uint32_t entry
 
 bool small_sprite_slot_in_use[256] = {false};
 
-int16_t drawSmallSprite(uint32_t sprite_control_structure, uint8_t sprite_color) {
+uint16_t drawSmallSprite(uint32_t sprite_control_structure, uint8_t sprite_color) {
     int slot = -1;
     for (int i = 0; i < 256; i++) {
         if (!small_sprite_slot_in_use[i]) {

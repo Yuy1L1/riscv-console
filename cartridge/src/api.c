@@ -1,3 +1,5 @@
+#include <stdbool.h>
+
 #include "api.h"
 
 uint32_t GetTicks() {
@@ -36,15 +38,15 @@ uint32_t import_export(char *pck, char *file) {
     return systemcall((uint32_t)pck, (uint32_t)file, 0, 0, 0, IMPORT_EXPORT);
 }
 
-uint32_t addHotkey(string key, Callable func) {
-    return systemcall((uint32_t)key, (uint32_t)func, 0, 0, 0, ADD_HOTKEY);
+uint32_t addHotkey(char key[]) {
+    return systemcall((uint32_t)key, 0, 0, 0, 0, ADD_HOTKEY);
 }
 
-uint32_t multipleKeyCheck(string key) {
+uint32_t multipleKeyCheck(char key[]) {
     return systemcall((uint32_t)key, 0, 0, 0, 0, MULTIPLE_KEY_CHECK);
 }
 
-uint32_t removeHotkey(string key) {
+uint32_t removeHotkey(char key[]) {
     return systemcall((uint32_t)key, 0, 0, 0, 0, REMOVE_HOTKEY);
 }
 
@@ -68,20 +70,12 @@ void timer_interrupt() {
     systemcall(0, 0, 0, 0, 0, TIMER_INTERRUPT);
 }
 
-uint32_t setGraphicMode() {
-    return systemcall(0, 0, 0, 0, 0, SET_GRAPHIC_MODE);
-}
-
 uint32_t setSmallColorPalette(uint32_t palette_number, uint32_t color, uint32_t entry_number) {
     return systemcall(palette_number, color, entry_number, 0, 0, SET_SMALL_COLOR_PALETTE);
 }
 
-int setGraphicMode() {
+uint32_t setGraphicsMode() {
     return systemcall(0, 0, 0, 0, 0, SET_GRAPHIC_MODE);
-}
-
-int setSmallColorPalette(uint32_t palette_number, uint32_t color, uint32_t entry_number) {
-    return systemcall(palette_number, color, entry_number, 0, 0, SET_SMALL_COLOR_PALETTE);
 }
 
 int setMediumColorPalette(uint32_t palette_number, uint32_t color, uint32_t entry_number) {
@@ -104,8 +98,8 @@ void changeSmallSpriteColor() {
     systemcall(0, 0, 0, 0, 0, CHANGE_SMALL_SPRITE_COLOR);
 }
 
-uint16_t drawSprite(uint32_t sprite_control_structure) {
-    return (uint16_t)systemcall(sprite_control_structure, 0, 0, 0, 0, DRAW_SPRITE);
+uint16_t drawSmallSprite(uint32_t sprite_control_structure, uint8_t sprite_color) {
+    return (uint16_t)systemcall(sprite_control_structure, (uint8_t) sprite_color, 0, 0, 0, DRAW_SPRITE);
 }
 
 void eraseSmallSprite(uint8_t slot) {

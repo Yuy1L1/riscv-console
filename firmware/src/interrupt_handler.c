@@ -2,7 +2,7 @@
 #include <stdio.h>
 #include "interrupt_handler.h"
 #include "memory_management.h"
-#include "sprite_managment.h"
+#include "sprite_management.h"
 
 volatile int video_counter = 0;
 

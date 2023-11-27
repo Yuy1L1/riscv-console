@@ -3,6 +3,8 @@
 #include <stdint.h>
 #endif
 
+#include <stdbool.h>
+
 #ifndef API_H
 #define API_H
 
@@ -120,21 +122,21 @@ uint32_t GetTicks();
 uint32_t GetController();
 
 // API 1
-int *operation_setting(char keyboard[]);
+uint32_t *operation_setting(char keyboard[]);
 
 // API 2 - physics
-void physics_simulation(char *phys);
+uint32_t physics_simulation(char *phys);
 
 // API 3 - security
-int *security_check(char files[]);
+uint32_t *security_check(char files[]);
 
 // API 4
-int import_export(char *pck, char *file);
+uint32_t import_export(char *pck, char *file);
 
 // API 5 - hotkeys
-int addHotkey(string key, Callable func);
-int multipleKeyCheck(string key);
-int removeHotkey(string key);
+uint32_t addHotkey(char key[]);
+uint32_t multipleKeyCheck(char key[]);
+uint32_t removeHotkey(char key[]);
 
 // API 6 - interrupts
 void cmd_interrupt();
@@ -149,10 +151,10 @@ uint32_t MemSet(unsigned char* dest, unsigned char value, int size);
 uint32_t MemCpy(unsigned char* dest, unsigned char* src, int count);
 
 // API 8 - sprite management
-int setGraphicMode();
-int setSmallColorPalette(uint32_t palette_number, uint32_t color, uint32_t entry_number);
+uint32_t setGraphicsMode();
+uint32_t setSmallColorPalette(uint32_t palette_number, uint32_t color, uint32_t entry_number);
 void changeSmallSpriteColor();
-uint16_t drawSprite(uint32_t sprite_control_structure);
+uint16_t drawSmallSprite(uint32_t sprite_control_structure, uint8_t sprite_color);
 void eraseSmallSprite(uint8_t slot);
 void moveSmallSprite(uint8_t slot, uint32_t sprite_control_structure, uint8_t sprite_color);
 int setMediumColorPalette(uint32_t palette_number, uint32_t color, uint32_t entry_number);

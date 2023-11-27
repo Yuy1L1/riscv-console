@@ -1,3 +1,8 @@
+#ifndef __INCLUDE_STDINT__
+#define __INCLUDE_STDINT__
+#include <stdint.h>
+#endif
+
 #include <stdlib.h>
 #include <stdio.h>
 #include <stdbool.h>
@@ -34,11 +39,11 @@
 #define MODE_CONTROL_REGISTER 0x500FF414
 #define GRAPHICS_MEMORY 0x50000000
 
-int setGraphicMode();
+int setGraphicsMode();
 // small sprite
 int setSmallColorPalette(uint32_t palette_number, uint32_t color, uint32_t entry_number);
 void changeSmallSpriteColor();
-uint16_t drawSprite(uint32_t sprite_control_structure);
+uint16_t drawSmallSprite(uint32_t sprite_control_structure, uint8_t sprite_color);
 void eraseSmallSprite(uint8_t slot);
 void moveSmallSprite(uint8_t slot, uint32_t sprite_control_structure, uint8_t sprite_color);
 // medium sprite
