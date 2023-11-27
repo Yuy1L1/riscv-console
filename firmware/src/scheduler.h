@@ -5,10 +5,14 @@
 #include "memory_management.h"
 #include <stdlib.h>
 
+typedef struct {
+    volatile int lock;
+} Mutex;
+
 //int switchThread(struct TCB* currentThread, struct TCB* nextThread); Probably doesn't work, just wishful thinking.
 int get_num_of_threads();
 int set_num_threads(int thread_num);
-void initMutex();
+Mutex* initMutex();
 void mutexLock();
 void mutextUnlock();
 
