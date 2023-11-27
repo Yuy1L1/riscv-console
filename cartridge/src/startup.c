@@ -1,5 +1,6 @@
 #include <stdint.h>
 #include <stdbool.h>
+#include <string.h>
 
 #include "api.h"
 
@@ -471,6 +472,6 @@ void setTextColorPalette(uint16_t entry_number, uint32_t background_color, uint3
     //the second 16-entry palettes
     volatile uint32_t *foreground_palette = (volatile uint32_t *) (TEXT_PALETTE_ADDR + (0x40) + (0x4) * entry_number);  
     *background_palette = foreground_color;
-    return 1;
+    return;
 }
 
