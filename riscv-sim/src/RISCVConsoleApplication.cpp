@@ -27,10 +27,10 @@ CRISCVConsoleApplication::CRISCVConsoleApplication(const std::string &appname, s
     
     auto VideoController = CVideoControllerAllocator::Allocate(GetVideoControllerModel(), DGraphicFactory);
     DRISCVConsole = std::make_shared<CRISCVConsole>(GetTimerUS(),GetScreenTimeoutMS(),GetCPUFrequency(),VideoController);
-    DInputRecorder = std::make_shared<CAutoRecorder>(GetTimerUS(),GetScreenTimeoutMS(),GetCPUFrequency());
+    DInputRecorder = std::make_shared<CAutoRecorder>(GetTimerUS(),GetScreenTimeoutMS(),GetCPUFrequency(),GetVideoControllerModel());
     DApplication->SetActivateCallback(this, ActivateCallback);
     DVariableTranslator = std::make_shared<CVariableTranslator>(DRISCVConsole->CPU(), DRISCVConsole->Memory());
-    
+    DVariableTranslator->MaxPointerDepth(GetMaxPointerDepth());
 }
 
 CRISCVConsoleApplication::~CRISCVConsoleApplication(){
@@ -161,6 +161,16 @@ bool CRISCVConsoleApplication::InstructionBoxScrollEventCallback(std::shared_ptr
     return App->InstructionBoxScrollEvent(widget);
 }
 
+bool CRISCVConsoleApplication::DebugVariableClickEventCallback(std::shared_ptr<CGUITreeNodeView> widget, SGUIButtonEvent &event, TGUICalldata data){
+    CRISCVConsoleApplication *App = static_cast<CRISCVConsoleApplication *>(data);
+    return App->DebugVariableClickEvent(widget, event);
+}
+
+bool CRISCVConsoleApplication::DebugVariableDetachClickEventCallback(std::shared_ptr<CGUIWidget> widget, SGUIButtonEvent &event, TGUICalldata data){
+    CRISCVConsoleApplication *App = static_cast<CRISCVConsoleApplication *>(data);
+    return App->DebugVariableDetachClickEvent(widget,event);
+}
+
 void CRISCVConsoleApplication::BreakpointEventCallback(CRISCVConsoleBreakpointCalldata data){
     CRISCVConsoleApplication *App = static_cast<CRISCVConsoleApplication *>(data);
     App->BreakpointEvent();
@@ -206,6 +216,7 @@ bool CRISCVConsoleApplication::MainWindowDeleteEvent(std::shared_ptr<CGUIWidget>
 
 void CRISCVConsoleApplication::MainWindowDestroy(std::shared_ptr<CGUIWidget> widget){
     DMainWindow = nullptr;
+    DDebugVariableWindow = nullptr;
 }
 
 bool CRISCVConsoleApplication::MainWindowKeyPressEvent(std::shared_ptr<CGUIWidget> widget, SGUIKeyEvent &event){
@@ -534,7 +545,6 @@ bool CRISCVConsoleApplication::ClearButtonClickEvent(std::shared_ptr<CGUIWidget>
 }
 
 bool CRISCVConsoleApplication::RecordButtonToggledEvent(std::shared_ptr<CGUIWidget> widget){
-
     if(!DDebugRecordButton->GetActive()){
         std::string Filename;
         auto FileChooser = DGUIFactory->NewFileChooserDialog("Save Record",false,DMainWindow);
@@ -591,6 +601,40 @@ bool CRISCVConsoleApplication::InstructionBoxScrollEvent(std::shared_ptr<CGUIScr
     DFollowingInstruction = (widget->GetBaseLine() <= widget->GetHighlightedBufferedLine()) && (widget->GetHighlightedBufferedLine() < widget->GetBaseLine() + widget->GetLineCount());
 
     RefreshDebugInstructionComboBox();
+    return true;
+}
+
+bool CRISCVConsoleApplication::DebugVariableClickEvent(std::shared_ptr<CGUITreeNodeView> widget, SGUIButtonEvent &event){
+    if((event.DType == SGUIButtonEventType::ButtonPress)&&((3 == event.DButton)||((1 == event.DButton)&&(event.DModifier.ModifierIsSet(SGUIModifierType::EType::Control))))){
+        DDebugVariablePopupMenu->PopupAtPointer();
+    }
+    
+    return true;
+}
+
+bool CRISCVConsoleApplication::CRISCVConsoleApplication::DebugVariableDetachClickEvent(std::shared_ptr<CGUIWidget> widget, SGUIButtonEvent &event){
+    if(DDebugVariableDetachPopupMenuItem->GetLabel()->GetText() == "Detach"){
+        auto TreeViewAlloctedWidth = DDebugVariableTreeView->ContainingWidget()->AllocatedWidth();
+        DConsoleDebugBox->Remove(DHighLevelDebugBox);
+        auto MainWindowWidth = DMainWindow->AllocatedWidth();
+        auto MainWindowHeight = DMainWindow->AllocatedHeight();
+        DMainWindow->Resize(MainWindowWidth - TreeViewAlloctedWidth, MainWindowHeight);
+        DDebugVariableWindow->Add(DHighLevelDebugBox);
+        DDebugVariableWindow->ShowAll();
+        int X, Y;
+        DMainWindow->GetPosition(X,Y);
+        DDebugVariableWindow->Move(X+MainWindowWidth - TreeViewAlloctedWidth,Y);
+        DDebugVariablePopupMenu->Hide();
+        DDebugVariableDetachPopupMenuItem->GetLabel()->SetText("Reattach");
+    }
+    else{
+        DDebugVariableWindow->Remove(DHighLevelDebugBox);
+        DDebugVariableWindow->Hide();
+        DConsoleDebugBox->PackStart(DHighLevelDebugBox,true,true,GetWidgetSpacing());
+        DDebugVariableDetachPopupMenuItem->GetLabel()->SetText("Detach");
+    }
+
+    
     return true;
 }
 
@@ -821,7 +865,14 @@ void CRISCVConsoleApplication::CreateDebugWidgets(){
     DDebugVariableTreeViewDecorator = std::make_shared< CVariableTreeViewDecorator >(DDebugVariableTreeView);
     DHighLevelDebugBox->PackStart(VarLabel,false,false,GetWidgetSpacing());
     DHighLevelDebugBox->PackStart(DDebugVariableTreeView->ContainingWidget(),true,true,GetWidgetSpacing());
-    
+    DDebugVariableTreeView->SetButtonPressEventCallback(this,DebugVariableClickEventCallback);
+    DDebugVariablePopupMenu = DGUIFactory->NewMenu();
+    DDebugVariableDetachPopupMenuItem = DGUIFactory->NewMenuItem("Detach");
+    DDebugVariableDetachPopupMenuItem->SetButtonPressEventCallback(this, DebugVariableDetachClickEventCallback);
+    DDebugVariablePopupMenu->Append(DDebugVariableDetachPopupMenuItem);
+    DDebugVariableDetachPopupMenuItem->Show();
+    DDebugVariableWindow = DApplication->NewWindow();
+    DDebugVariableWindow->SetBorderWidth(GetWidgetSpacing());
 
     DConsoleDebugBox->PackStart(DConsoleBox,false,false,GetWidgetSpacing());
     DConsoleDebugBox->PackStart(DLowLevelDebugBox,false,false,GetWidgetSpacing());
@@ -1095,6 +1146,14 @@ uint32_t CRISCVConsoleApplication::GetVideoControllerModel(){
         VideoControllerModel = CVideoControllerAllocator::MaxModel();
     }
     return VideoControllerModel;
+}
+
+uint32_t CRISCVConsoleApplication::GetMaxPointerDepth(){
+    auto PointerDepth = DConfiguration.GetIntegerParameter(CRISCVConsoleApplicationConfiguration::EParameter::PointerDepth);
+    if(16 < PointerDepth){
+        PointerDepth = 16;
+    }
+    return PointerDepth;
 }
 
 std::string CRISCVConsoleApplication::CreateRegisterTooltip(size_t index){

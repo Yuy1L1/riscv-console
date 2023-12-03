@@ -65,6 +65,7 @@ GTK3_OBJS =             $(OBJ_DIR)/GUIApplicationGTK3.o             \
                         $(OBJ_DIR)/GUIMenuGTK3.o                    \
                         $(OBJ_DIR)/GUIMenuItemGTK3.o                \
                         $(OBJ_DIR)/GUIMenuShellGTK3.o               \
+                        $(OBJ_DIR)/GUIOriginAnchorGTK3.o            \
                         $(OBJ_DIR)/GUIScrollBarGTK3.o               \
                         $(OBJ_DIR)/GUIScrollWindowGTK3.o            \
                         $(OBJ_DIR)/GUITextBufferGTK3.o              \
@@ -117,6 +118,9 @@ DATA_UTIL_OBJS =        $(OBJ_DIR)/BufferedSeekableDataSource.o     \
 SIM_APP_OBJS =          $(OBJ_DIR)/main.o                           \
                         $(OBJ_DIR)/AutoRunner.o                     \
                         $(OBJ_DIR)/AutoRecorder.o                   \
+                        $(OBJ_DIR)/JSONElement.o                    \
+                        $(OBJ_DIR)/JSONParser.o                     \
+                        $(OBJ_DIR)/JSONWriter.o                     \
                         $(OBJ_DIR)/RISCVConsoleApplication.o        \
                         $(OBJ_DIR)/RISCVConsoleApplicationConfig.o  \
                         $(OBJ_DIR)/PeriodicTimeout.o                \
@@ -129,6 +133,9 @@ SIM_APP_OBJS =          $(OBJ_DIR)/main.o                           \
 
 AUTO_RUN_APP_OBJS =     $(OBJ_DIR)/autorunmain.o                    \
                         $(OBJ_DIR)/AutoRunner.o                     \
+                        $(OBJ_DIR)/JSONElement.o                    \
+                        $(OBJ_DIR)/JSONParser.o                     \
+                        $(OBJ_DIR)/JSONWriter.o                     \
                         $(GRAPHICS_OBJS)                            \
                         $(DATA_UTIL_OBJS)                           \
                         $(ELF_DWARF_OBJS)                           \
