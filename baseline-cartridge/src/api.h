@@ -167,6 +167,7 @@ int setBackgroundColorPalette(uint32_t palette_number, uint32_t color, uint32_t 
 int drawBackgroundSprite(uint32_t sprite_control_structure, uint8_t sprite_color, uint32_t mode);
 void eraseBackgroundSprite(uint8_t slot, uint32_t mode);
 
+// Caution - APIs below here are not implemented yet
 // API 9 - emulator
 bool emulator();
 bool checkLocation();
