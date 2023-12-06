@@ -160,13 +160,10 @@ void moveSmallSprite(uint8_t slot, uint32_t sprite_control_structure, uint8_t sp
 int setMediumColorPalette(uint32_t palette_number, uint32_t color, uint32_t entry_number);
 int16_t drawMediumSprite(uint32_t sprite_control_structure, uint8_t sprite_color);
 void eraseMediumSprite(uint8_t slot);
-void changeMediumSpriteColor();
 int setLargeColorPalette(uint32_t palette_number, uint32_t color, uint32_t entry_number);
 int16_t drawLargeSprite(uint32_t sprite_control_structure, uint8_t sprite_color);
 void eraseLargeSprite(uint8_t slot);
-void changeLargeSpriteColor();
 int setBackgroundColorPalette(uint32_t palette_number, uint32_t color, uint32_t entry_number);
-int changeBackgroundColorPalette();
 int drawBackgroundSprite(uint32_t sprite_control_structure, uint8_t sprite_color, uint32_t mode);
 void eraseBackgroundSprite(uint8_t slot, uint32_t mode);
 

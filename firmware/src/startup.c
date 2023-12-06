@@ -148,7 +148,7 @@ uint32_t c_system_call(uint32_t arg0, uint32_t arg1, uint32_t arg2, uint32_t arg
     } else if (call == 26) {
         eraseMediumSprite((uint8_t)arg0);
     } else if (call == 27) {
-        changeMediumSpriteColor();
+        // Undefined
     } else if (call == 28) {
         return setLargeColorPalette(arg0, arg1, arg2);
     } else if (call == 29) {
@@ -156,11 +156,11 @@ uint32_t c_system_call(uint32_t arg0, uint32_t arg1, uint32_t arg2, uint32_t arg
     } else if (call == 30) {
         eraseLargeSprite((uint8_t)arg0);
     } else if (call == 31) {
-        changeLargeSpriteColor();
+        // Undefined
     } else if (call == 32) {
         return setBackgroundColorPalette(arg0, arg1, arg2);
     } else if (call == 33) {
-        return changeBackgroundColorPalette();
+        // Undefined
     } else if (call == 34) {
         return drawBackgroundSprite(arg0, (uint8_t)arg1, arg2);
     } else if (call == 35) {

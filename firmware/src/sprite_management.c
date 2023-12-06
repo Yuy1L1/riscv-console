@@ -1,4 +1,5 @@
 #include "sprite_management.h"
+#include "memory_management.h"
 
 uint32_t small_sprite_counter = 0;
 uint32_t medium_sprite_counter = 0;
@@ -6,9 +7,9 @@ uint32_t large_sprite_counter = 0;
 uint32_t background_sprite_counter = 0;
 
 int setGraphicsMode() {
-    // default mode: 0, text mode
-    uint32_t curr_mode = *((volatile uint32_t *) MODE_CONTROL_REGISTER);
-    curr_mode |=1;
+    volatile uint32_t *mode_control_register = (volatile uint32_t*) MODE_CONTROL_REGISTER;
+    *mode_control_register |= 0x01;
+
     return 0;
 }
 
@@ -17,13 +18,13 @@ int setSmallColorPalette(uint32_t palette_number, uint32_t color, uint32_t entry
     // each entry is worth 4 B -> 0x4
     // color is for the RGB val, entry_number is for which entry in the palette to change
     volatile uint32_t *palette = (volatile uint32_t *) (SMALL_SPRITE_PALETTE_ADDR + (0x400) * palette_number + (0x4) * entry_number);  
-    MemMove((unsigned char*) palette, (unsigned char*) &color, 4);
+    memmove((unsigned char*) palette, (unsigned char*) &color, 4);
     return 1;
 }
 
 bool small_sprite_slot_in_use[256] = {false};
 
-uint16_t drawSmallSprite(uint32_t sprite_control_structure, uint8_t sprite_color) {
+int16_t drawSmallSprite(uint32_t sprite_control_structure, uint8_t sprite_color) {
     int slot = -1;
     for (int i = 0; i < 256; i++) {
         if (!small_sprite_slot_in_use[i]) {
@@ -77,7 +78,6 @@ void moveSmallSprite(uint8_t slot, uint32_t sprite_control_structure, uint8_t sp
     return;
 }
 
-// medium sprite
 
 int setMediumColorPalette(uint32_t palette_number, uint32_t color, uint32_t entry_number) {
     //each palette is of 1 KiB size => 0x400
@@ -135,13 +135,6 @@ void eraseMediumSprite(uint8_t slot) {
     medium_sprite_slot_in_use[slot] = false;
 }
 
-void changeMediumSpriteColor() {
-    //TODO
-}
-
-
-
-// large sprite
 int setLargeColorPalette(uint32_t palette_number, uint32_t color, uint32_t entry_number) {
     //each palette is of 1 KiB size => 0x400
     // each entry is of 4B in the memory map
@@ -197,13 +190,6 @@ void eraseLargeSprite(uint8_t slot) {
     large_sprite_slot_in_use[slot] = false;
 }
 
-void changeLargeSpriteColor() {
-    // TODO
-}
-
-
-
-// background sprite
 int setBackgroundColorPalette(uint32_t palette_number, uint32_t color, uint32_t entry_number) {
     // each palette is of 1 KiB size 1 KiB = 1024 B = 0x400
     // each entry is worth 4 B -> 0x4 in the memory map
@@ -213,30 +199,21 @@ int setBackgroundColorPalette(uint32_t palette_number, uint32_t color, uint32_t 
     return 1;
 }
 
-int changeBackgroundColorPalette() {
-    // TODO: is there really a diff btw set and change?
-    return 1;
-}
-
 bool background_sprite_slot_in_use_0[4] = {false}; // only 4 parts in "pixel" mode
 bool background_sprite_slot_in_use_1[8] = {false}; // only 8 parts in "tile" mode
 
-
 int drawBackgroundSprite(uint32_t sprite_control_structure, uint8_t sprite_color, uint32_t mode){
     int slot = -1;
-    if (mode == 0) // if "pixel" mode
-    {
-        for (int i = 0; i < 4; i++) 
-        {
-            if (!background_sprite_slot_in_use_0[i]) 
-            {
+    // Pixel mode
+    if (mode == 0) {
+        for (int i = 0; i < 4; i++) {
+            if (!background_sprite_slot_in_use_0[i]) {
             slot = i;
             break;
             }
         }
 
-        if (slot == -1) 
-        {
+        if (slot == -1) {
             return -1; // No available slot
         }
 
@@ -244,24 +221,19 @@ int drawBackgroundSprite(uint32_t sprite_control_structure, uint8_t sprite_color
 
         uint8_t index = (sprite_control_structure >> 24) & 0xFF;
         uint8_t* background_data_addr = (volatile uint32_t *)(BACKGROUND_SPRITE_DATA_ADDR + slot * BACKGROUND_SPRITE_DATA_SIZE_0);
-        for (int k = 0; k < 4; k++) 
-        {
+        for (int k = 0; k < 4; k++) {
             *(background_data_addr + k) = sprite_color;
         }
-    }
-    else // "tile" mode
-    {
-        for (int i = 0; i < 8; i++) 
-        {
-            if (!background_sprite_slot_in_use_1[i]) 
-            {
+    } else {
+        // Tile mode
+        for (int i = 0; i < 8; i++) {
+            if (!background_sprite_slot_in_use_1[i]) {
             slot = i;
             break;
             }
         }
 
-        if (slot == -1) 
-        {
+        if (slot == -1) {
             return -1; // No available slot
         }
 
@@ -269,41 +241,33 @@ int drawBackgroundSprite(uint32_t sprite_control_structure, uint8_t sprite_color
 
         uint8_t index = (sprite_control_structure >> 24) & 0xFF;
         uint8_t* background_data_addr = (volatile uint32_t *)(BACKGROUND_SPRITE_DATA_ADDR + slot * BACKGROUND_SPRITE_DATA_SIZE_1);
-        for (int k = 0; k < 8; k++) 
-        {
+        for (int k = 0; k < 8; k++) {
             *(background_data_addr + k) = sprite_color;
         }
     }
 
     uint32_t *background_control_addr = (volatile uint32_t *)(BACKGROUND_SPRITE_CONTROL_ADDR + slot * BACKGROUND_SPRITE_CONTROL_SIZE);
     *background_control_addr = sprite_control_structure;
-    background_sprite_counter++;
+    //background_sprite_counter++;
 
     return slot;
 }
 
-void eraseBackgroundSprite(uint8_t slot, uint32_t mode){
-    if (mode == 0)
-    {
-        if (slot >= 4) 
-        {
+void eraseBackgroundSprite(uint8_t slot, uint32_t mode) {
+    if (mode == 0) {
+        if (slot >= 4) {
         return;
         }
         uint8_t* background_data_addr = (volatile uint32_t *)(BACKGROUND_SPRITE_DATA_ADDR + slot * BACKGROUND_SPRITE_DATA_SIZE_0);
-        for (int k = 0; k < 4; k++) 
-        {
+        for (int k = 0; k < 4; k++) {
             *(background_data_addr + k) = 0;
         }
-    }
-    else
-    {
-        if (slot >= 8) 
-        {
+    } else {
+        if (slot >= 8) {
         return;
         }
         uint8_t* background_data_addr = (volatile uint32_t *)(BACKGROUND_SPRITE_DATA_ADDR + slot * BACKGROUND_SPRITE_DATA_SIZE_1);
-        for (int k = 0; k < 8; k++) 
-        {
+        for (int k = 0; k < 8; k++) {
             *(background_data_addr + k) = 0;
         }
     }
@@ -312,12 +276,9 @@ void eraseBackgroundSprite(uint8_t slot, uint32_t mode){
     *background_control_addr = 0;
 
     // Mark slot as available
-    if (mode == 0)
-    {
+    if (mode == 0) {
         background_sprite_slot_in_use_0[slot] = false;
-    }
-    else
-    {
+    } else {
         background_sprite_slot_in_use_1[slot] = false;
     }
 }

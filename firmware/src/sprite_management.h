@@ -36,29 +36,28 @@
 #define LARGE_SPRITE_PALETTE_ADDR      0x500F1000
 #define BACKGROUND_SPRITE_PALETTE_ADDR 0x500F0000
 
-#define MODE_CONTROL_REGISTER 0x500FF414
+#define MODE_CONTROL_REGISTER 0x500F6780
 #define GRAPHICS_MEMORY 0x50000000
+
+#define SMALL_SPRITE_PALETTE_ADDR 0x500F3000
 
 int setGraphicsMode();
 // small sprite
 int setSmallColorPalette(uint32_t palette_number, uint32_t color, uint32_t entry_number);
 void changeSmallSpriteColor();
-uint16_t drawSmallSprite(uint32_t sprite_control_structure, uint8_t sprite_color);
+int16_t drawSmallSprite(uint32_t sprite_control_structure, uint8_t sprite_color);
 void eraseSmallSprite(uint8_t slot);
 void moveSmallSprite(uint8_t slot, uint32_t sprite_control_structure, uint8_t sprite_color);
 // medium sprite
 int setMediumColorPalette(uint32_t palette_number, uint32_t color, uint32_t entry_number);
 int16_t drawMediumSprite(uint32_t sprite_control_structure, uint8_t sprite_color);
 void eraseMediumSprite(uint8_t slot);
-void changeMediumSpriteColor();
 // large sprite
 int setLargeColorPalette(uint32_t palette_number, uint32_t color, uint32_t entry_number);
 int16_t drawLargeSprite(uint32_t sprite_control_structure, uint8_t sprite_color);
 void eraseLargeSprite(uint8_t slot);
-void changeLargeSpriteColor();
 // background sprite
 int setBackgroundColorPalette(uint32_t palette_number, uint32_t color, uint32_t entry_number);
-int changeBackgroundColorPalette();
 int drawBackgroundSprite(uint32_t sprite_control_structure, uint8_t sprite_color, uint32_t mode);
 void eraseBackgroundSprite(uint8_t slot, uint32_t mode);
 
