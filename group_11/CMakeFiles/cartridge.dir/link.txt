@@ -1,0 +1,1 @@
+riscv32-unknown-elf-gcc -ffreestanding -nostartfiles -Wl,--gc-sections -Wl,-T,/code/riscv-render/cartridge/riscv32-console.ld CMakeFiles/cartridge.dir/src/main.c.o CMakeFiles/cartridge.dir/src/crt0.s.o CMakeFiles/cartridge.dir/src/interrupt.s.o CMakeFiles/cartridge.dir/src/cube.c.o -o cartridge  PureC-Software-Renderer/Mango/libMango.a -lm 
