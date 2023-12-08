@@ -1,0 +1,12 @@
+/Users/jaredgivens/Documents/Assignments/ECS251/riscv-console/riscv-render/cartridge/PureC-Software-Renderer/build/CMakeFiles/c_software_renderer.dir
+/Users/jaredgivens/Documents/Assignments/ECS251/riscv-console/riscv-render/cartridge/PureC-Software-Renderer/build/CMakeFiles/edit_cache.dir
+/Users/jaredgivens/Documents/Assignments/ECS251/riscv-console/riscv-render/cartridge/PureC-Software-Renderer/build/CMakeFiles/rebuild_cache.dir
+/Users/jaredgivens/Documents/Assignments/ECS251/riscv-console/riscv-render/cartridge/PureC-Software-Renderer/build/Mango/CMakeFiles/Mango.dir
+/Users/jaredgivens/Documents/Assignments/ECS251/riscv-console/riscv-render/cartridge/PureC-Software-Renderer/build/Mango/CMakeFiles/edit_cache.dir
+/Users/jaredgivens/Documents/Assignments/ECS251/riscv-console/riscv-render/cartridge/PureC-Software-Renderer/build/Mango/CMakeFiles/rebuild_cache.dir
+/Users/jaredgivens/Documents/Assignments/ECS251/riscv-console/riscv-render/cartridge/PureC-Software-Renderer/build/Mango/SDL/CMakeFiles/sdl_headers_copy.dir
+/Users/jaredgivens/Documents/Assignments/ECS251/riscv-console/riscv-render/cartridge/PureC-Software-Renderer/build/Mango/SDL/CMakeFiles/SDL2main.dir
+/Users/jaredgivens/Documents/Assignments/ECS251/riscv-console/riscv-render/cartridge/PureC-Software-Renderer/build/Mango/SDL/CMakeFiles/SDL2-static.dir
+/Users/jaredgivens/Documents/Assignments/ECS251/riscv-console/riscv-render/cartridge/PureC-Software-Renderer/build/Mango/SDL/CMakeFiles/uninstall.dir
+/Users/jaredgivens/Documents/Assignments/ECS251/riscv-console/riscv-render/cartridge/PureC-Software-Renderer/build/Mango/SDL/CMakeFiles/edit_cache.dir
+/Users/jaredgivens/Documents/Assignments/ECS251/riscv-console/riscv-render/cartridge/PureC-Software-Renderer/build/Mango/SDL/CMakeFiles/rebuild_cache.dir
