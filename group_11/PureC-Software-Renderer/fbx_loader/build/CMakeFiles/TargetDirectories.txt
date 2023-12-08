@@ -1,3 +1,0 @@
-/Users/jaredgivens/Documents/Assignments/ECS251/riscv-console/riscv-render/cartridge/PureC-Software-Renderer/fbx_loader/build/CMakeFiles/model_loader.dir
-/Users/jaredgivens/Documents/Assignments/ECS251/riscv-console/riscv-render/cartridge/PureC-Software-Renderer/fbx_loader/build/CMakeFiles/edit_cache.dir
-/Users/jaredgivens/Documents/Assignments/ECS251/riscv-console/riscv-render/cartridge/PureC-Software-Renderer/fbx_loader/build/CMakeFiles/rebuild_cache.dir
