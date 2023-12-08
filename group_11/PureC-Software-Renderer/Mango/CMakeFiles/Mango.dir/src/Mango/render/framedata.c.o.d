@@ -1,0 +1,29 @@
+cartridge/PureC-Software-Renderer/Mango/CMakeFiles/Mango.dir/src/Mango/render/framedata.c.o: \
+ /code/riscv-render/cartridge/PureC-Software-Renderer/Mango/src/Mango/render/framedata.c \
+ /code/riscv-render/cartridge/PureC-Software-Renderer/Mango/src/Mango/render/framedata.h \
+ /opt/riscv32/lib/gcc/riscv32-unknown-elf/13.2.0/include/float.h \
+ /code/riscv-render/cartridge/PureC-Software-Renderer/Mango/src/Mango/render/../math/vec4.h \
+ /code/riscv-render/cartridge/PureC-Software-Renderer/Mango/src/Mango/render/../math/../system/system.h \
+ /opt/riscv32/lib/gcc/riscv32-unknown-elf/13.2.0/include/stddef.h \
+ /opt/riscv32/lib/gcc/riscv32-unknown-elf/13.2.0/include/stdint.h \
+ /opt/riscv32/lib/gcc/riscv32-unknown-elf/13.2.0/include/stdint-gcc.h \
+ /code/riscv-render/cartridge/PureC-Software-Renderer/Mango/src/Mango/render/../math/../system/real.h \
+ /opt/riscv32/riscv32-unknown-elf/include/math.h \
+ /opt/riscv32/riscv32-unknown-elf/include/sys/reent.h \
+ /opt/riscv32/riscv32-unknown-elf/include/_ansi.h \
+ /opt/riscv32/riscv32-unknown-elf/include/newlib.h \
+ /opt/riscv32/riscv32-unknown-elf/include/_newlib_version.h \
+ /opt/riscv32/riscv32-unknown-elf/include/sys/config.h \
+ /opt/riscv32/riscv32-unknown-elf/include/machine/ieeefp.h \
+ /opt/riscv32/riscv32-unknown-elf/include/sys/features.h \
+ /opt/riscv32/riscv32-unknown-elf/include/sys/_types.h \
+ /opt/riscv32/riscv32-unknown-elf/include/machine/_types.h \
+ /opt/riscv32/riscv32-unknown-elf/include/machine/_default_types.h \
+ /opt/riscv32/riscv32-unknown-elf/include/sys/lock.h \
+ /opt/riscv32/riscv32-unknown-elf/include/sys/cdefs.h \
+ /opt/riscv32/riscv32-unknown-elf/include/_ansi.h \
+ /code/riscv-render/cartridge/PureC-Software-Renderer/Mango/src/Mango/render/../math/mat4.h \
+ /code/riscv-render/cartridge/PureC-Software-Renderer/Mango/src/Mango/render/../math/vec3.h \
+ /opt/riscv32/lib/gcc/riscv32-unknown-elf/13.2.0/include/stdbool.h \
+ /code/riscv-render/cartridge/PureC-Software-Renderer/Mango/src/Mango/render/../math/shader_math.h \
+ /code/riscv-render/cartridge/PureC-Software-Renderer/Mango/src/Mango/render/display_rvc.h
