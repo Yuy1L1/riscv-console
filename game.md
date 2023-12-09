@@ -48,6 +48,8 @@ We want to demonstrate the following ability based on Prof's description:
     
 -   Draw to the background, large, medium and small sprites
 Therefore, here are the proposed functions that should be implemented to the demonstrate the aforementioned abilities.
+
+
 Parameters:
 // create class dinosaur
 struct dino{
