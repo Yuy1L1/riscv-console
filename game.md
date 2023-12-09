@@ -51,11 +51,13 @@ Therefore, here are the proposed functions that should be implemented to the dem
 
 
 Parameters:
+
 // create class dinosaur
 struct dino{
 int pos_x, pos_y;
 int color;
 };
+
 //create class cactus
 {
 int pos_x, pos_y;
