@@ -38,6 +38,7 @@ uint16_t dinoZ = 1;
 volatile uint16_t currentDinoSpriteIndex = DINO_SPRITE_INDEX;
 volatile uint16_t currentDinoHeight = DINO_HEIGHT;
 volatile uint32_t highScore = 0;
+volatile uint32_t curScore = 0;
 volatile int isCollided = 0;
 
 
@@ -46,7 +47,7 @@ void initializeGame() {
     clearTextArea(0, 0, TEXT_WIDTH, TEXT_HEIGHT);
     setGraphicsMode(GRAPHICS_MODE);
     clearObstacles();
-    global = 0;
+    curScore = 0;
 }
 
 void drawInitialState() {
@@ -81,12 +82,13 @@ void updateGameState() {
 
         if (controller_status & FAST_FALL_KEY) {
             currentDinoSpriteIndex = DINO_CROUCHING_SPRITE_INDEX;
-            currentDinoHeight = DINO_HEIGHT / 2;
+            currentDinoHeight = (DINO_HEIGHT / 2) - AIR_OBSTACLE_OFFSET;
         } else {
             currentDinoSpriteIndex = DINO_SPRITE_INDEX;
             currentDinoHeight = DINO_HEIGHT;
         }
     }
+    curScore++;
 }
 
 void renderGame() {
@@ -111,8 +113,8 @@ int main() {
 
             if (checkCollision(dinoX, dinoY, DINO_WIDTH, currentDinoHeight) && !isCollided) {
                 isCollided = 1;
-                if (global > highScore) {
-                    highScore = global;
+                if (curScore > highScore) {
+                    highScore = curScore;
                 }
             }
 
@@ -129,12 +131,10 @@ int main() {
             if (!isCollided) {
                 renderGame();
                 drawObstacles();
-                displayNumberUsingSprites(30, 100, 3, (long long int) global, 0);
-            } else {
-                displayNumberUsingSprites(30, 100, 3, (long long int) 0, 0);
             }
             last_global = global;
-            displayNumberUsingSprites(30, 150, 3, (long long int) highScore, 1);
+            displayNumberUsingSprites(30, 10, 3, (long long int) curScore, 0);
+            displayNumberUsingSprites(30, 60, 3, (long long int) highScore, 1);
         }
     }
     return 0;

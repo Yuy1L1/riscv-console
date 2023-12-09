@@ -11,7 +11,11 @@ float obstacleSpawnTimer = 0;
 
 void spawnObstacle() {
     if (numObstacles < MAX_OBSTACLES) {
-        Obstacle newObstacle = {SCREEN_WIDTH, GROUND_Y, DINO_HEIGHT, DINO_WIDTH};
+        ObstacleType type = (prng() % 100 < AIR_OBSTACLE_CHANCE) ? AIR_OBSTACLE : GROUND_OBSTACLE;
+        float y = type == AIR_OBSTACLE ? GROUND_Y - ((float)DINO_HEIGHT/2) - AIR_OBSTACLE_OFFSET: GROUND_Y;
+        float height = DINO_HEIGHT;
+
+        Obstacle newObstacle = {SCREEN_WIDTH, y, DINO_WIDTH, height, type};
         obstacles[numObstacles++] = newObstacle;
     }
     obstacle_spawn_speed = OBSTACLE_SPAWN_MIN_SPEED + (prng() % (OBSTACLE_SPAWN_MAX_SPEED - OBSTACLE_SPAWN_MIN_SPEED + 1));
@@ -35,18 +39,27 @@ void updateObstacles() {
 
 void drawObstacles() {
     for (int i = 0; i < numObstacles; i++) {
-        int controlIndex = 2 + i;
-        drawSprite((int)obstacles[i].x, (int)obstacles[i].y, 1, OBSTACLE_SPRITE_INDEX, MEDIUM_T, 0, controlIndex);
+        int controlIndex = OBSTACLE_SPRITE_OFFSET + i;
+        uint16_t spriteIndex = obstacles[i].type == AIR_OBSTACLE ? OBSTACLE_AIR_SPRITE_INDEX : OBSTACLE_SPRITE_INDEX;
+        drawSprite((int)obstacles[i].x, (int)obstacles[i].y, 1, spriteIndex, MEDIUM_T, 0, controlIndex);
     }
 }
 
 int checkCollision(uint16_t dinoX, uint16_t dinoY, uint16_t dinoWidth, uint16_t dinoHeight) {
     for (int i = 0; i < numObstacles; i++) {
         if (dinoX < obstacles[i].x + obstacles[i].width &&
-            dinoX + dinoWidth > obstacles[i].x &&
-            dinoY < obstacles[i].y + obstacles[i].height &&
-            dinoY + dinoHeight > obstacles[i].y) {
-            return 1;
+            dinoX + dinoWidth > obstacles[i].x) {
+
+            if (obstacles[i].type == GROUND_OBSTACLE && 
+                dinoY < obstacles[i].y + obstacles[i].height &&
+                dinoY + dinoHeight > obstacles[i].y) {
+                return 1;
+            }
+
+            if (obstacles[i].type == AIR_OBSTACLE &&
+                dinoY + dinoHeight > obstacles[i].y) {
+                return 1;
+            }
         }
     }
     return 0;

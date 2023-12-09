@@ -1,6 +1,7 @@
 #include "utils.h"
 #include "./syscalls/graphics.h"
 #include "./usefulValues.h"
+#include "constants.h"
 
 static uint32_t prng_state;
 
@@ -30,7 +31,7 @@ int getDigit(long long int number, int digitIndex) {
 }
 
 void displayNumberUsingSprites(uint16_t x, uint16_t y, uint16_t z, long long int number, int displayHighScore) {
-    static const uint16_t textSpriteIndices[] = {32, 33, 34, 32, 6, 26, 27, 28, 29, 30, 31};
+    static const uint16_t textSpriteIndices[] = {32, 33, 34, 32, CLEAR_SPRITE_INDEX, 26, 27, 28, 29, 30, 31};
     uint32_t currentControlStructure = displayHighScore ? 255 : 220;
 
     int startIndex = displayHighScore ? 0 : 5;
@@ -43,9 +44,15 @@ void displayNumberUsingSprites(uint16_t x, uint16_t y, uint16_t z, long long int
 
     x += textLength * 32;
     int length = numDigits(number);
-    for (int i = 0; i < length; ++i) {
+    int i;
+    for (i = 0; i < length; ++i) {
         int digit = getDigit(number, length - i - 1);
         uint16_t spriteIndex = (digit == 0) ? 25 : 16 + digit - 1;
         drawSprite(x + (i * 32), y, z, spriteIndex, MEDIUM_T, 0, currentControlStructure--);
+    }
+
+    // Writing in empty sprites to clear out unwanted digits
+    for (; i < 10; ++i) {
+        drawSprite(x + (i * 32), y, z, CLEAR_SPRITE_INDEX, MEDIUM_T, 0, currentControlStructure--);
     }
 }
