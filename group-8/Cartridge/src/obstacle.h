@@ -5,7 +5,9 @@
 
 typedef enum {
     GROUND_OBSTACLE,
-    AIR_OBSTACLE
+    AIR_OBSTACLE,
+    CLEAR_OBSTACLE,
+    NO_OBSTACLE
 } ObstacleType;
 
 typedef struct {
@@ -22,7 +24,7 @@ typedef struct {
 #define OBSTACLE_MOVEMENT_SPEED -1
 #define OBSTACLE_SPAWN_MIN_SPEED 200
 #define OBSTACLE_SPAWN_MAX_SPEED 500
-#define AIR_OBSTACLE_CHANCE 100
+#define AIR_OBSTACLE_CHANCE 30
 
 void spawnObstacle();
 void updateObstacles();
