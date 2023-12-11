@@ -11,6 +11,7 @@
 #include "./usefulValues.h"
 #include "./spriteData.h"
 #include "obstacle.h"
+#include "cloud.h"
 #include "utils.h"
 #include "constants.h"
 
@@ -40,6 +41,7 @@ volatile uint16_t currentDinoHeight = DINO_HEIGHT;
 volatile uint32_t highScore = 0;
 volatile uint32_t curScore = 0;
 volatile int isCollided = 0;
+volatile float difficultyCurve = 0.0001f;
 
 
 void initializeGame() {
@@ -48,6 +50,16 @@ void initializeGame() {
     setGraphicsMode(GRAPHICS_MODE);
     clearObstacles();
     curScore = 0;
+}
+
+void displayTitleScreen() {
+    setGraphicsMode(TEXT_MODE);
+    clearTextArea(0, 0, TEXT_WIDTH, TEXT_HEIGHT);
+    drawText(10, 2, "Welcome to Infinite Runner Game!");
+    drawText(10, 7, "Press W to start the game");
+    drawText(10, 12, "Press W to jump");
+    drawText(10, 17, "Press X to crouch");
+    drawText(10, 22, "Hold down W to restart the game when you lose");
 }
 
 void drawInitialState() {
@@ -99,6 +111,8 @@ int main() {
     initializeGame();
     drawInitialState();
     last_reset = getReset();
+    displayTitleScreen();
+    int gameStarted = 0;
 
     while (1) {
         reset = getReset();
@@ -106,9 +120,20 @@ int main() {
         controller_status = getController();
 
         if (global != last_global) {
+            if (!gameStarted) {
+                if (controller_status & JUMP_KEY) {
+                    gameStarted = 1;
+                    initializeGame();
+                    drawInitialState();
+                }
+                continue;
+            }
+
             if (!isCollided) {
                 updateGameState();
-                updateObstacles();
+                updateObstacles(curScore * difficultyCurve);
+                updateClouds(curScore * difficultyCurve);
+                // updateObstacles(0);
             }
 
             if (checkCollision(dinoX, dinoY, DINO_WIDTH, currentDinoHeight) && !isCollided) {
@@ -131,6 +156,7 @@ int main() {
             if (!isCollided) {
                 renderGame();
                 drawObstacles();
+                drawClouds();
             }
             last_global = global;
             displayNumberUsingSprites(30, 10, 3, (long long int) curScore, 0);

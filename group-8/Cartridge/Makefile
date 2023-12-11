@@ -39,6 +39,7 @@ TARGET_OBJS =   $(OBJ_DIR)/main.o               \
                 $(OBJ_DIR)/interrupt.o          \
                 $(OBJ_DIR)/startup.o			\
 				$(OBJ_DIR)/obstacle.o			\
+				$(OBJ_DIR)/cloud.o			\
 				$(OBJ_DIR)/utils.o			\
 				$(OBJ_DIR)/graphics.o			\
 				$(OBJ_DIR)/memory.o			\

@@ -27,8 +27,9 @@ typedef struct {
 #define AIR_OBSTACLE_CHANCE 30
 
 void spawnObstacle();
-void updateObstacles();
+void updateObstacles(float extraSpeed);
 void drawObstacles();
 int checkCollision(uint16_t dinoX, uint16_t dinoY, uint16_t dinoWidth, uint16_t dinoHeight);
+void clearObstacles();
 
 #endif // OBSTACLE_H

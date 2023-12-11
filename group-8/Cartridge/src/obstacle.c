@@ -6,51 +6,63 @@
 
 Obstacle obstacles[MAX_OBSTACLES];
 volatile int obstacle_spawn_speed = 300;
-int numObstacles = 0;
 float obstacleSpawnTimer = 0;
+int headIndex = 0;
+int tailIndex = 0;
 
 void spawnObstacle() {
-    if (numObstacles < MAX_OBSTACLES) {
+    if ((tailIndex + 1) % MAX_OBSTACLES != headIndex) {
         ObstacleType type = (prng() % 100 < AIR_OBSTACLE_CHANCE) ? AIR_OBSTACLE : GROUND_OBSTACLE;
         float y = type == AIR_OBSTACLE ? GROUND_Y - ((float)DINO_HEIGHT/2) - AIR_OBSTACLE_OFFSET: GROUND_Y;
         float height = DINO_HEIGHT;
 
         Obstacle newObstacle = {SCREEN_WIDTH, y, DINO_WIDTH, height, type};
-        obstacles[numObstacles++] = newObstacle;
+        obstacles[tailIndex] = newObstacle;
+        tailIndex = (tailIndex + 1) % MAX_OBSTACLES;
     }
     obstacle_spawn_speed = OBSTACLE_SPAWN_MIN_SPEED + (prng() % (OBSTACLE_SPAWN_MAX_SPEED - OBSTACLE_SPAWN_MIN_SPEED + 1));
 }
 
-void updateObstacles() {
+void updateObstacles(float extraSpeed) {
     obstacleSpawnTimer += 1;
     if (obstacleSpawnTimer >= obstacle_spawn_speed) {
         spawnObstacle();
         obstacleSpawnTimer = 0;
     }
 
-    for (int i = 0; i < numObstacles; i++) {
-        obstacles[i].x += OBSTACLE_MOVEMENT_SPEED;
-        if (obstacles[i].x < -obstacles[i].width) {
+    for (int i = headIndex; i != tailIndex; i = (i + 1) % MAX_OBSTACLES) {
+        obstacles[i].x += (OBSTACLE_MOVEMENT_SPEED - extraSpeed);
+        if (obstacles[i].x < 0 - obstacles[i].width) {
             obstacles[i].type = CLEAR_OBSTACLE;
+            headIndex = (headIndex + 1) % MAX_OBSTACLES;
+            drawSprite((int)obstacles[i].x, (int)obstacles[i].y, 1, CLEAR_SPRITE_INDEX, MEDIUM_T, 0, OBSTACLE_SPRITE_OFFSET + i);
         }
+    }
+}
+
+uint16_t mapObstacleSprite(ObstacleType type) {
+    switch (type) {
+        case GROUND_OBSTACLE: return OBSTACLE_SPRITE_INDEX;
+        case AIR_OBSTACLE: return OBSTACLE_AIR_SPRITE_INDEX;
+        case CLEAR_OBSTACLE: return CLEAR_SPRITE_INDEX;
+        default: return 0;
     }
 }
 
 void drawObstacles() {
-    for (int i = 0; i < numObstacles; i++) {
+    for (int i = headIndex; i != tailIndex; i = (i + 1) % MAX_OBSTACLES) {
         int controlIndex = OBSTACLE_SPRITE_OFFSET + i;
-        uint16_t spriteIndex;
         if (obstacles[i].type == CLEAR_OBSTACLE) {
-            spriteIndex = CLEAR_SPRITE_INDEX;
+            clearSprite(MEDIUM_T, controlIndex);
         } else {
-            spriteIndex = obstacles[i].type == AIR_OBSTACLE ? OBSTACLE_AIR_SPRITE_INDEX : OBSTACLE_SPRITE_INDEX;
+            uint16_t spriteIndex = mapObstacleSprite(obstacles[i].type);
+            drawSprite((int)obstacles[i].x, (int)obstacles[i].y, 1, spriteIndex, MEDIUM_T, 0, controlIndex);
         }
-        drawSprite((int)obstacles[i].x, (int)obstacles[i].y, 1, spriteIndex, MEDIUM_T, 0, controlIndex);
     }
 }
 
 int checkCollision(uint16_t dinoX, uint16_t dinoY, uint16_t dinoWidth, uint16_t dinoHeight) {
-    for (int i = 0; i < numObstacles; i++) {
+    for (int i = headIndex; i != tailIndex; i = (i + 1) % MAX_OBSTACLES) {
         if (dinoX < obstacles[i].x + obstacles[i].width &&
             dinoX + dinoWidth > obstacles[i].x) {
 
@@ -70,14 +82,15 @@ int checkCollision(uint16_t dinoX, uint16_t dinoY, uint16_t dinoWidth, uint16_t 
 }
 
 void clearObstacles() {
-    for (int i = 0; i < numObstacles; i++) {
+    for (int i = 0; i < MAX_OBSTACLES; i++) {
         obstacles[i].type = CLEAR_OBSTACLE;
     }
     drawObstacles();
     for (int i = 0; i < MAX_OBSTACLES; i++) {
-        obstacles[i] = (Obstacle){0, 0, 0, 0, NO_OBSTACLE};
+        obstacles[i] = (Obstacle){0, 0, 0, 0, CLEAR_OBSTACLE};
     }
-    numObstacles = 0;
     obstacleSpawnTimer = 0;
     obstacle_spawn_speed = OBSTACLE_SPAWN_MIN_SPEED;
+    headIndex = 0;
+    tailIndex = 0;
 }
