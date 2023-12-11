@@ -20,7 +20,9 @@
 #define FAST_FALL_FORCE 0.8
 #define JUMP_FORCE 3
 #define DINO_SPRITE_INDEX 3
+#define DINO_SPRITE_INDEX_ALT 5
 #define DINO_CROUCHING_SPRITE_INDEX 4
+#define DINO_CROUCHING_SPRITE_INDEX_ALT 6
 #define DINO_CONTROL_STRUCTURE_INDEX 1
 #define JUMP_KEY W_KEY
 #define FAST_FALL_KEY X_KEY
@@ -42,6 +44,7 @@ volatile uint32_t highScore = 0;
 volatile uint32_t curScore = 0;
 volatile int isCollided = 0;
 volatile float difficultyCurve = 0.0001f;
+volatile int dinoSpriteToggle = 0;
 
 
 void initializeGame() {
@@ -92,11 +95,12 @@ void updateGameState() {
         dinoY = GROUND_Y;
         isJumping = 0;
 
+        dinoSpriteToggle = !dinoSpriteToggle;
         if (controller_status & FAST_FALL_KEY) {
-            currentDinoSpriteIndex = DINO_CROUCHING_SPRITE_INDEX;
+            currentDinoSpriteIndex = dinoSpriteToggle ? DINO_CROUCHING_SPRITE_INDEX : DINO_CROUCHING_SPRITE_INDEX_ALT;
             currentDinoHeight = (DINO_HEIGHT / 2) - AIR_OBSTACLE_OFFSET;
         } else {
-            currentDinoSpriteIndex = DINO_SPRITE_INDEX;
+            currentDinoSpriteIndex = dinoSpriteToggle ? DINO_SPRITE_INDEX_ALT : DINO_SPRITE_INDEX;
             currentDinoHeight = DINO_HEIGHT;
         }
     }
@@ -133,7 +137,6 @@ int main() {
                 updateGameState();
                 updateObstacles(curScore * difficultyCurve);
                 updateClouds(curScore * difficultyCurve);
-                // updateObstacles(0);
             }
 
             if (checkCollision(dinoX, dinoY, DINO_WIDTH, currentDinoHeight) && !isCollided) {
