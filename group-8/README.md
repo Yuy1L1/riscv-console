@@ -27,3 +27,15 @@ Welcome to Infinite Runner Game! This is a fast-paced game where your objective 
 5. Run the game:
 
 `../../runsim.sh`
+
+6. Input firmware:
+
+`0riscv-console-example.strip`
+
+7. Input cartridge:
+
+`bin/riscv-console-example.strip`
+
+8. Press PWR.
+
+9. Play the game!
