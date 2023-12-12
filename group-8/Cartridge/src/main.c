@@ -58,11 +58,12 @@ void initializeGame() {
 void displayTitleScreen() {
     setGraphicsMode(TEXT_MODE);
     clearTextArea(0, 0, TEXT_WIDTH, TEXT_HEIGHT);
-    drawText(10, 2, "Welcome to Infinite Runner Game!");
-    drawText(10, 7, "Press W to start the game");
-    drawText(10, 12, "Press W to jump");
-    drawText(10, 17, "Press X to crouch");
-    drawText(10, 22, "Hold down W to restart the game when you lose");
+    drawText(2, 2, "Welcome to Infinite Runner Game!");
+    drawText(2, 7, "Press W to start the game");
+    drawText(2, 12, "Press W to jump");
+    drawText(2, 17, "Press X to crouch");
+    drawText(2, 22, "Hold down W to restart the game when you lose");
+    drawText(2, 27, "Please note: the game must be run without debug mode");
 }
 
 void drawInitialState() {
